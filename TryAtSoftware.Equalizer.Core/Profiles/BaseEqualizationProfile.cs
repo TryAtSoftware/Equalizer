@@ -7,7 +7,7 @@ public abstract class BaseEqualizationProfile<T1, T2> : IEqualizationProfile<T1,
 {
     public bool CanExecuteFor(object a, object b) => a is T1 && b is T2;
 
-    public void AssertEquality(object expected, object actual, IEqualizationOptions options)
+    public IEqualizationResult Equalize(object expected, object actual, IEqualizationOptions options)
     {
         Assert.True(this.CanExecuteFor(expected, actual), $"The equalization profile {this.GetType().Name} cannot be executed for the given objects.");
 
@@ -15,8 +15,8 @@ public abstract class BaseEqualizationProfile<T1, T2> : IEqualizationProfile<T1,
         var typedActual = Assert.OfType<T2>(actual, nameof(actual));
         Assert.NotNull(options, nameof(options));
 
-        this.AssertEquality(typedExpected, typedActual, options);
+        return this.Equalize(typedExpected, typedActual, options);
     }
 
-    public abstract void AssertEquality(T1 expected, T2 actual, IEqualizationOptions options);
+    public abstract IEqualizationResult Equalize(T1 expected, T2 actual, IEqualizationOptions options);
 }

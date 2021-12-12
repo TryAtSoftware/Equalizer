@@ -21,11 +21,23 @@ public class Equalizer : IEqualizer
 
     public void AssertEquality(object expected, object actual)
     {
-        var profile = this.GetProfile(expected, actual);
-        Assert.NotNull(profile, nameof(profile));
+        var equalizationResult = this.Equalize(expected, actual);
+        Assert.True(equalizationResult.IsSuccessful, equalizationResult.Message);
+    }
 
-        var options = new EqualizationOptions(expected.GetType(), actual.GetType(), this.AssertEquality);
-        profile.AssertEquality(expected, actual, options);
+    private IEqualizationResult Equalize(object expected, object actual)
+    {
+        var principalType = expected.GetType();
+        var subordinateType = actual.GetType();
+        return EqualizeInternally(expected, actual);
+
+        IEqualizationResult EqualizeInternally(object expectedValue, object actualValue)
+        {
+            var profile = this.GetProfile(expectedValue, actualValue);
+            Assert.NotNull(profile, nameof(profile));
+            var options = new EqualizationOptions(principalType, subordinateType, EqualizeInternally);
+            return profile.Equalize(expectedValue, actualValue, options);
+        }
     }
 
     public bool AddProfileProvider(IEqualizationProfileProvider provider)

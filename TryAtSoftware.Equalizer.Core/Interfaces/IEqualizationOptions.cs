@@ -9,8 +9,8 @@ public interface IEqualizationOptions
     Type PrincipalType { get; }
 
     [NotNull]
-    Type ActualType { get; }
+    Type SubordinateType { get; }
 
     [NotNull]
-    Action<object, object> AssertEquality { get; }
+    Func<object, object, IEqualizationResult> AssertEquality { get; }
 }

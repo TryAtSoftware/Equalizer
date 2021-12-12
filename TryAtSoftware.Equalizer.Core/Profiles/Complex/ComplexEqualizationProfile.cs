@@ -3,45 +3,57 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using TryAtSoftware.Equalizer.Core.Assertions;
 using TryAtSoftware.Equalizer.Core.Extensions;
 using TryAtSoftware.Equalizer.Core.Interfaces;
+using TryAtSoftware.Equalizer.Core.Profiles.Complex.Rules;
+using TryAtSoftware.Extensions.Reflection;
 
 public class ComplexEqualizationProfile<T1, T2> : BaseEqualizationProfile<T1, T2>
-    where T1 : class
-    where T2 : class
 {
     private readonly List<IEqualizationRule<T1, T2>> _rules = new();
 
-    public override void AssertEquality(T1 expected, T2 actual, IEqualizationOptions options)
+    public override IEqualizationResult Equalize(T1 expected, T2 actual, IEqualizationOptions options)
     {
-        if (expected is null && actual is null) return;
+        if (expected is null && actual is null) return new SuccessfulEqualizationResult();
+        if (expected is null || actual is null) return new UnsuccessfulEqualizationResult(this.UnsuccessfulEqualization(expected, actual));
 
-        Assert.NotNull(expected, nameof(expected));
-        Assert.NotNull(actual, nameof(actual));
-
-        var membersBinder = MembersBinderCache<T2>.Binder;
         foreach (var rule in this._rules)
         {
-            Assert.True(membersBinder.MemberInfos.TryGetValue(rule.MemberName, out var memberInfo), $"Member {rule.MemberName} was not found");
-            var actualValue = memberInfo.GetValue(actual);
-            var expectedValue = rule.ValueProvider.GetValue(expected);
-
-            options.AssertEquality(actualValue, expectedValue);
+            var equalizationResult = rule.Equalize(expected, actual, options);
+            if (!equalizationResult.IsSuccessful)
+                return equalizationResult;
         }
+
+        return new SuccessfulEqualizationResult();
     }
 
     protected void Equalize(Expression<Func<T1, object>> expectedValueExpressionSelector, Expression<Func<T2, object>> actualValueExpressionSelector)
     {
-        var valueProvider = new ContainedValueProvider<T1>(expectedValueExpressionSelector);
-        var rule = new EqualizationRule<T1, T2>(actualValueExpressionSelector, valueProvider);
+        var expectedValueMemberInfo = expectedValueExpressionSelector.GetMemberInfo();
+        var actualValueMemberInfo = actualValueExpressionSelector.GetMemberInfo();
+        var rule = new EqualizationRule<T1, T2>(expectedValueMemberInfo.Name, actualValueMemberInfo.Name);
         this.AddRule(rule);
     }
 
     protected void Equalize<TValue>(TValue value, Expression<Func<T2, object>> actualValueExpressionSelector)
     {
-        var valueProvider = new ConstantValueProvider<T1,TValue>(value);
-        var rule = new EqualizationRule<T1, T2>(actualValueExpressionSelector, valueProvider);
+        var actualValueMemberInfo = actualValueExpressionSelector.GetMemberInfo();
+        var rule = new ConstantValueEqualizationRule<T1, T2>(value, actualValueMemberInfo.Name);
+        this.AddRule(rule);
+    }
+
+    protected void Differentiate(Expression<Func<T1, object>> expectedValueExpressionSelector, Expression<Func<T2, object>> actualValueExpressionSelector)
+    {
+        var expectedValueMemberInfo = expectedValueExpressionSelector.GetMemberInfo();
+        var actualValueMemberInfo = actualValueExpressionSelector.GetMemberInfo();
+        var rule = new DifferentiationRule<T1, T2>(expectedValueMemberInfo.Name, actualValueMemberInfo.Name);
+        this.AddRule(rule);
+    }
+
+    protected void Differentiate<TValue>(TValue value, Expression<Func<T2, object>> actualValueExpressionSelector)
+    {
+        var actualValueMemberInfo = actualValueExpressionSelector.GetMemberInfo();
+        var rule = new ConstantValueDifferentiationRule<T1, T2>(value, actualValueMemberInfo.Name);
         this.AddRule(rule);
     }
 
