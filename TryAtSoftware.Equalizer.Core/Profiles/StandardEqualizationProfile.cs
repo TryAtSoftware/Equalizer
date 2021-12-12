@@ -3,11 +3,11 @@
 using TryAtSoftware.Equalizer.Core.Extensions;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 
-public class StandardEqualizationProfile : IEqualizationProfile
+public class StandardEqualizationProfile : BaseEqualizationProfile
 {
-    public bool CanExecuteFor(object a, object b) => true;
+    public override bool CanExecuteFor(object a, object b) => true;
 
-    public IEqualizationResult Equalize(object expected, object actual, IEqualizationOptions options)
+    protected override IEqualizationResult EqualizeInternally(object expected, object actual, IEqualizationOptions options)
     {
         if (Equals(expected, actual))
             return new SuccessfulEqualizationResult();

@@ -8,7 +8,7 @@ using TryAtSoftware.Equalizer.Core.Interfaces;
 using TryAtSoftware.Equalizer.Core.Profiles.Complex.Rules;
 using TryAtSoftware.Extensions.Reflection;
 
-public class ComplexEqualizationProfile<T1, T2> : BaseEqualizationProfile<T1, T2>
+public class ComplexEqualizationProfile<T1, T2> : BaseTypedEqualizationProfile<T1, T2>
 {
     private readonly List<IEqualizationRule<T1, T2>> _rules = new();
 
