@@ -2,17 +2,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using TryAtSoftware.Equalizer.Core.Extensions;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 using TryAtSoftware.Equalizer.Core.Profiles.Complex.Rules;
-using TryAtSoftware.Extensions.Reflection;
 
-public class ComplexEqualizationProfile<T1, T2> : BaseTypedEqualizationProfile<T1, T2>
+public class ComplexEqualizationProfile<TPrincipal, TSubordinate> : BaseTypedEqualizationProfile<TPrincipal, TSubordinate>
 {
-    private readonly List<IEqualizationRule<T1, T2>> _rules = new();
+    private readonly List<IEqualizationRule<TPrincipal, TSubordinate>> _rules = new();
 
-    public override IEqualizationResult Equalize(T1 expected, T2 actual, IEqualizationOptions options)
+    public override IEqualizationResult Equalize(TPrincipal expected, TSubordinate actual, IEqualizationOptions options)
     {
         if (expected is null && actual is null) return new SuccessfulEqualizationResult();
         if (expected is null || actual is null) return new UnsuccessfulEqualizationResult(this.UnsuccessfulEqualization(expected, actual));
@@ -20,44 +18,32 @@ public class ComplexEqualizationProfile<T1, T2> : BaseTypedEqualizationProfile<T
         foreach (var rule in this._rules)
         {
             var equalizationResult = rule.Equalize(expected, actual, options);
-            if (!equalizationResult.IsSuccessful)
-                return equalizationResult;
+            if (equalizationResult.IsSuccessful) continue;
+
+            var errorMessage = this.UnsuccessfulEqualization(expected, actual);
+            return new UnsuccessfulEqualizationResult(errorMessage.With(equalizationResult));
         }
 
         return new SuccessfulEqualizationResult();
     }
 
-    protected void Equalize(Expression<Func<T1, object>> expectedValueExpressionSelector, Expression<Func<T2, object>> actualValueExpressionSelector)
+    protected void Equalize(Func<TPrincipal, object> expectedValueSelector, Func<TSubordinate, object> actualValueSelector)
     {
-        var expectedValueMemberInfo = expectedValueExpressionSelector.GetMemberInfo();
-        var actualValueMemberInfo = actualValueExpressionSelector.GetMemberInfo();
-        var rule = new EqualizationRule<T1, T2>(expectedValueMemberInfo.Name, actualValueMemberInfo.Name);
+        var rule = new EqualizationRule<TPrincipal, TSubordinate>(expectedValueSelector, actualValueSelector);
         this.AddRule(rule);
     }
 
-    protected void Equalize<TValue>(TValue value, Expression<Func<T2, object>> actualValueExpressionSelector)
+    protected void Equalize<TValue>(TValue value, Func<TSubordinate, object> actualValueSelector) => this.Equalize(_ => value, actualValueSelector);
+
+    protected void Differentiate(Func<TPrincipal, object> expectedValueSelector, Func<TSubordinate, object> actualValueSelector)
     {
-        var actualValueMemberInfo = actualValueExpressionSelector.GetMemberInfo();
-        var rule = new ConstantValueEqualizationRule<T1, T2>(value, actualValueMemberInfo.Name);
+        var rule = new DifferentiationRule<TPrincipal, TSubordinate>(expectedValueSelector, actualValueSelector);
         this.AddRule(rule);
     }
 
-    protected void Differentiate(Expression<Func<T1, object>> expectedValueExpressionSelector, Expression<Func<T2, object>> actualValueExpressionSelector)
-    {
-        var expectedValueMemberInfo = expectedValueExpressionSelector.GetMemberInfo();
-        var actualValueMemberInfo = actualValueExpressionSelector.GetMemberInfo();
-        var rule = new DifferentiationRule<T1, T2>(expectedValueMemberInfo.Name, actualValueMemberInfo.Name);
-        this.AddRule(rule);
-    }
+    protected void Differentiate<TValue>(TValue value, Func<TSubordinate, object> actualValueSelector) => this.Differentiate(_ => value, actualValueSelector);
 
-    protected void Differentiate<TValue>(TValue value, Expression<Func<T2, object>> actualValueExpressionSelector)
-    {
-        var actualValueMemberInfo = actualValueExpressionSelector.GetMemberInfo();
-        var rule = new ConstantValueDifferentiationRule<T1, T2>(value, actualValueMemberInfo.Name);
-        this.AddRule(rule);
-    }
-
-    protected bool AddRule(IEqualizationRule<T1, T2> equalizationRule)
+    protected bool AddRule(IEqualizationRule<TPrincipal, TSubordinate> equalizationRule)
     {
         if (equalizationRule is null)
             return false;

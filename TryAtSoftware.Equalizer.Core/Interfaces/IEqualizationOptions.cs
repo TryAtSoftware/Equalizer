@@ -12,5 +12,5 @@ public interface IEqualizationOptions
     Type SubordinateType { get; }
 
     [NotNull]
-    Func<object, object, IEqualizationResult> AssertEquality { get; }
+    IEqualizationResult Equalize(object expected, object actual);
 }
