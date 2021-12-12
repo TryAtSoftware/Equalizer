@@ -21,7 +21,7 @@ public class CollectionEqualizationProfile : BaseTypedEqualizationProfile<IEnume
             var expectedElement = iteratedExpected[i];
             var actualElement = iteratedActual[i];
 
-            var equalizationResult = options.AssertEquality(expectedElement, actualElement);
+            var equalizationResult = options.Equalize(expectedElement, actualElement);
             if (equalizationResult.IsSuccessful) continue;
 
             var errorMessage = this.UnsuccessfulEqualization(expectedElement, actualElement, $"Element at index {i} do not match");

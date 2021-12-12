@@ -6,14 +6,16 @@ using TryAtSoftware.Equalizer.Core.Interfaces;
 
 public class EqualizationOptions : IEqualizationOptions
 {
-    public EqualizationOptions([NotNull] Type principalType, [NotNull] Type subordinateType, [NotNull] Func<object, object, IEqualizationResult> assertEquality)
+    private readonly Func<object, object, IEqualizationResult> _equalize;
+
+    public EqualizationOptions([NotNull] Type principalType, [NotNull] Type subordinateType, [NotNull] Func<object, object, IEqualizationResult> equalize)
     {
         this.PrincipalType = principalType ?? throw new ArgumentNullException(nameof(principalType));
         this.SubordinateType = subordinateType ?? throw new ArgumentNullException(nameof(subordinateType));
-        this.AssertEquality = assertEquality ?? throw new ArgumentNullException(nameof(assertEquality));
+        this._equalize = equalize ?? throw new ArgumentNullException(nameof(equalize));
     }
 
     public Type PrincipalType { get; }
     public Type SubordinateType { get; }
-    public Func<object, object, IEqualizationResult> AssertEquality { get; }
+    public IEqualizationResult Equalize(object expected, object actual) => this._equalize(expected, actual);
 }

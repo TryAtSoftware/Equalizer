@@ -2,31 +2,30 @@
 
 using System;
 using JetBrains.Annotations;
+using TryAtSoftware.Equalizer.Core.Extensions;
 using TryAtSoftware.Equalizer.Core.Interfaces;
-using TryAtSoftware.Extensions.Reflection;
 
-public class DifferentiationRule<T1, T2> : IEqualizationRule<T1, T2>
+public class DifferentiationRule<TPrincipal, TSubordinate> : IEqualizationRule<TPrincipal, TSubordinate>
 {
-    private readonly string _expectedValueMemberName;
-    private readonly string _actualValueMemberName;
+    [NotNull]
+    private readonly Func<TPrincipal, object> _expectedValueRetrieval;
 
-    public DifferentiationRule([NotNull] string expectedValueMemberName, [NotNull] string actualValueMemberName)
+    [NotNull]
+    private readonly Func<TSubordinate, object> _actualValueRetrieval;
+
+    public DifferentiationRule([NotNull] Func<TPrincipal, object> expectedValueRetrieval, [NotNull] Func<TSubordinate, object> actualValueRetrieval)
     {
-        if (string.IsNullOrWhiteSpace(expectedValueMemberName))
-            throw new ArgumentNullException(nameof(expectedValueMemberName));
-        if (string.IsNullOrWhiteSpace(actualValueMemberName))
-            throw new ArgumentNullException(nameof(actualValueMemberName));
-
-        this._expectedValueMemberName = expectedValueMemberName;
-        this._actualValueMemberName = actualValueMemberName;
+        this._expectedValueRetrieval = expectedValueRetrieval ?? throw new ArgumentNullException(nameof(expectedValueRetrieval));
+        this._actualValueRetrieval = actualValueRetrieval ?? throw new ArgumentNullException(nameof(actualValueRetrieval));
     }
 
-    public IEqualizationResult Equalize(T1 expected, T2 actual, IEqualizationOptions options)
+    public IEqualizationResult Equalize(TPrincipal expected, TSubordinate actual, IEqualizationOptions options)
     {
-        var expectedValueMemberInfo = MembersBinderCache<T1>.Binder.GetRequiredMemberInfo(this._expectedValueMemberName);
-        var expectedValue = expectedValueMemberInfo.GetValue(expected);
-        var constantDifferentiationRule = new ConstantValueDifferentiationRule<T1, T2>(expectedValue, this._actualValueMemberName);
+        var expectedValue = this._expectedValueRetrieval(expected);
+        var actualValue = this._actualValueRetrieval(actual);
 
-        return constantDifferentiationRule.Equalize(expected, actual, options);
+        var equalizationResult = options.Equalize(expectedValue, actualValue);
+        if (!equalizationResult.IsSuccessful) return new SuccessfulEqualizationResult();
+        return new UnsuccessfulEqualizationResult(this.UnsuccessfulDifferentiation(expectedValue, actualValue));
     }
 }

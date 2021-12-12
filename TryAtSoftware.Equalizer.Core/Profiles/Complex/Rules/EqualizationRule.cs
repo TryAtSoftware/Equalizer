@@ -2,32 +2,28 @@
 
 using System;
 using JetBrains.Annotations;
-using TryAtSoftware.Extensions.Reflection;
+using TryAtSoftware.Equalizer.Core.Extensions;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 
-public class EqualizationRule<T1, T2> : IEqualizationRule<T1, T2>
+public class EqualizationRule<TPrincipal, TSubordinate> : IEqualizationRule<TPrincipal, TSubordinate>
 {
-    private readonly string _expectedValueMemberName;
-    private readonly string _actualValueMemberName;
+    [NotNull]
+    private readonly Func<TPrincipal, object> _expectedValueRetrieval;
 
-    public EqualizationRule([NotNull] string expectedValueMemberName, [NotNull] string actualValueMemberName)
+    [NotNull]
+    private readonly Func<TSubordinate, object> _actualValueRetrieval;
+
+    public EqualizationRule([NotNull] Func<TPrincipal, object> expectedValueRetrieval, [NotNull] Func<TSubordinate, object> actualValueRetrieval)
     {
-        if (string.IsNullOrWhiteSpace(expectedValueMemberName))
-            throw new ArgumentNullException(nameof(expectedValueMemberName));
-        if (string.IsNullOrWhiteSpace(actualValueMemberName))
-            throw new ArgumentNullException(nameof(actualValueMemberName));
-
-        this._expectedValueMemberName = expectedValueMemberName;
-        this._actualValueMemberName = actualValueMemberName;
+        this._expectedValueRetrieval = expectedValueRetrieval ?? throw new ArgumentNullException(nameof(expectedValueRetrieval));
+        this._actualValueRetrieval = actualValueRetrieval ?? throw new ArgumentNullException(nameof(actualValueRetrieval));
     }
 
-    public IEqualizationResult Equalize(T1 expected, T2 actual, IEqualizationOptions options)
+    public IEqualizationResult Equalize(TPrincipal expected, TSubordinate actual, IEqualizationOptions options)
     {
-        var expectedValueMemberInfo = MembersBinderCache<T1>.Binder.GetRequiredMemberInfo(this._expectedValueMemberName);
+        var expectedValue = this._expectedValueRetrieval(expected);
+        var actualValue = this._actualValueRetrieval(actual);
 
-        var expectedValue = expectedValueMemberInfo.GetValue(expected);
-        var constantEqualizationRule = new ConstantValueEqualizationRule<T1, T2>(expectedValue, this._actualValueMemberName);
-
-        return constantEqualizationRule.Equalize(expected, actual, options);
+        return options.Equalize(expectedValue, actualValue);
     }
 }
