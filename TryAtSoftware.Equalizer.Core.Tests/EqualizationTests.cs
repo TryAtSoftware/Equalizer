@@ -62,9 +62,17 @@ public class EqualizationTests
         yield return new object[] { new Action<Repository>(rp => rp.OrganizationId = 56) };
         yield return new object[] { new Action<Repository>(rp => rp.Name = "Different name") };
         yield return new object[] { new Action<Repository>(rp => rp.InternalName = "Test name") };
+        yield return new object[] { new Action<Repository>(rp => rp.InternalName = null) };
+        yield return new object[] { new Action<Repository>(rp => rp.InternalName = string.Empty) };
+        yield return new object[] { new Action<Repository>(rp => rp.InternalName = "   ") };
         yield return new object[] { new Action<Repository>(rp => rp.Description = "Different description") };
         yield return new object[] { new Action<Repository>(rp => rp.InitialCommits = new[] { "Different commits" }) };
         yield return new object[] { new Action<Repository>(rp => rp.SubsequentCommits = new[] { "Some commits" }) };
+        yield return new object[] { new Action<Repository>(rp => rp.Likes = -1) };
+        yield return new object[] { new Action<Repository>(rp => rp.Likes = 0) };
+        yield return new object[] { new Action<Repository>(rp => rp.Likes = 1) };
+        yield return new object[] { new Action<Repository>(rp => rp.Likes = 2) };
+        yield return new object[] { new Action<Repository>(rp => rp.Likes = 1200) };
     }
 
     private static Equalizer PrepareEqualizer()
@@ -97,6 +105,7 @@ public class EqualizationTests
         repository.OrganizationId = 5;
         repository.InitialCommits = PrepareInitialCommits();
         repository.SubsequentCommits = Enumerable.Empty<string>();
+        repository.Likes = 6;
     }
 
     private static IEnumerable<string> PrepareInitialCommits() => new[] { "A", "B", "C", "merge A and B" };
