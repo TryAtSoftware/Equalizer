@@ -5,7 +5,6 @@ using TryAtSoftware.Extensions.Reflection;
 using TryAtSoftware.Extensions.Reflection.Interfaces;
 
 internal static class MembersBinderCache<TEntity>
-    where TEntity : class
 {
     static MembersBinderCache()
     {

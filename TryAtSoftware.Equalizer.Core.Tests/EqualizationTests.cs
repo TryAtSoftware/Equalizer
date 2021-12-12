@@ -19,13 +19,8 @@ public class EqualizationTests
     [Fact]
     public void EqualizationShouldBeExecutedSuccessfullyForLogicallyEqualEntities()
     {
-        var repository = new Repository
-        {
-            Name = "Test name",
-            Description = "Test description",
-            OrganizationId = 5
-        };
-
+        var repository = new Repository();
+        PrepareRepository(repository);
         var repositoryPrototype = new RepositoryPrototype
         {
             Name = "Test name",
@@ -39,13 +34,8 @@ public class EqualizationTests
     [Fact]
     public void EqualizationShouldBeExecutedSuccessfullyForLogicallyUnequalEntities()
     {
-        var repository = new Repository
-        {
-            Name = "Test name",
-            Description = "Test description",
-            OrganizationId = 5
-        };
-
+        var repository = new Repository();
+        PrepareRepository(repository);
         var repositoryPrototype = new RepositoryPrototype
         {
             Name = "Different test name",
@@ -59,14 +49,9 @@ public class EqualizationTests
     [Fact]
     public void EqualizationShouldIgnoreMembersThatAreNotConfigured()
     {
-
-        var extendedRepository = new ExtendedRepository
-        {
-            Name = "Test name",
-            Description = "Test description",
-            OrganizationId = 5,
-            CreationTime = DateTime.Today
-        };
+        var extendedRepository = new ExtendedRepository();
+        PrepareRepository(extendedRepository);
+        extendedRepository.CreationTime = DateTime.Today;
 
         var repositoryPrototype = new RepositoryPrototype
         {
@@ -85,5 +70,14 @@ public class EqualizationTests
         profilesProvider.AddProfile(new RepositoryEqualizationProfile());
         equalizer.AddProfileProvider(profilesProvider);
         return equalizer;
+    }
+
+    private static void PrepareRepository(Repository repository)
+    {
+        repository.Id = 1;
+        repository.InternalName = "internal_test_name";
+        repository.Name = "Test name";
+        repository.Description = "Test description";
+        repository.OrganizationId = 5;
     }
 }

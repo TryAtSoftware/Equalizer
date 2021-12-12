@@ -10,5 +10,7 @@ public class RepositoryEqualizationProfile : ComplexEqualizationProfile<Reposito
         this.Equalize(rp => rp.Name, r => r.Name);
         this.Equalize(rp => rp.Description, r => r.Description);
         this.Equalize(5, r => r.OrganizationId);
+        this.Differentiate(rp => rp.Name, r => r.InternalName);
+        this.Differentiate<int>(default, r => r.Id);
     }
 }
