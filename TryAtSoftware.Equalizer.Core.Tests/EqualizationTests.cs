@@ -30,15 +30,15 @@ public class EqualizationTests
     }
 
     [Theory]
-    [MemberData(nameof(GetPrototypeChanges))]
-    public void EqualizationShouldBeExecutedSuccessfullyForLogicallyUnequalEntities(Action<RepositoryPrototype> change)
+    [MemberData(nameof(GetChanges))]
+    public void EqualizationShouldBeExecutedSuccessfullyForLogicallyUnequalEntities(Action<Repository> change)
     {
         Assert.NotNull(change);
         var repositoryPrototype = PrepareRepositoryPrototype();
         var repository = new Repository();
         PrepareRepository(repository);
 
-        change(repositoryPrototype);
+        change(repository);
 
         var equalizer = PrepareEqualizer();
         Assert.Throws<InvalidAssertException>(() => equalizer.AssertEquality(repositoryPrototype, repository));
@@ -56,11 +56,15 @@ public class EqualizationTests
         equalizer.AssertEquality(repositoryPrototype, extendedRepository);
     }
 
-    public static IEnumerable<object[]> GetPrototypeChanges()
+    public static IEnumerable<object[]> GetChanges()
     {
-        yield return new object[] { new Action<RepositoryPrototype>(rp => rp.Name = "Different name") };
-        yield return new object[] { new Action<RepositoryPrototype>(rp => rp.Description = "Different description") };
-        yield return new object[] { new Action<RepositoryPrototype>(rp => rp.CommitMessages = new[] { "Different commits" }) };
+        yield return new object[] { new Action<Repository>(rp => rp.Id = 0) };
+        yield return new object[] { new Action<Repository>(rp => rp.OrganizationId = 56) };
+        yield return new object[] { new Action<Repository>(rp => rp.Name = "Different name") };
+        yield return new object[] { new Action<Repository>(rp => rp.InternalName = "Test name") };
+        yield return new object[] { new Action<Repository>(rp => rp.Description = "Different description") };
+        yield return new object[] { new Action<Repository>(rp => rp.InitialCommits = new[] { "Different commits" }) };
+        yield return new object[] { new Action<Repository>(rp => rp.SubsequentCommits = new[] { "Some commits" }) };
     }
 
     private static Equalizer PrepareEqualizer()
