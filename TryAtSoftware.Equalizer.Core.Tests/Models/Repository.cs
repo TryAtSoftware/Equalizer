@@ -12,4 +12,5 @@ public class Repository
     public string Description { get; set; }
     public IEnumerable<string> InitialCommits { get; set; }
     public IEnumerable<string> SubsequentCommits { get; set; }
+    public int Likes { get; set; }
 }

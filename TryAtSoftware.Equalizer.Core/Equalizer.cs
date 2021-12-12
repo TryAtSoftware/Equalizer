@@ -7,6 +7,7 @@ using TryAtSoftware.Equalizer.Core.Extensions;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 using TryAtSoftware.Equalizer.Core.ProfileProviders;
 using TryAtSoftware.Equalizer.Core.Profiles;
+using TryAtSoftware.Equalizer.Core.Profiles.Templates;
 
 public class Equalizer : IEqualizer
 {
@@ -16,6 +17,12 @@ public class Equalizer : IEqualizer
     public Equalizer()
     {
         var dedicatedProfileProvider = new DedicatedProfileProvider();
+        dedicatedProfileProvider.AddProfile(new LowerThanEqualizationProfile());
+        dedicatedProfileProvider.AddProfile(new LowerThanOrEqualEqualizationProfile());
+        dedicatedProfileProvider.AddProfile(new GreaterThanEqualizationProfile());
+        dedicatedProfileProvider.AddProfile(new GreaterThanOrEqualEqualizationProfile());
+        dedicatedProfileProvider.AddProfile(new EmptyCollectionEqualizationProfile());
+        dedicatedProfileProvider.AddProfile(new EmptyTextEqualizationProfile());
         dedicatedProfileProvider.AddProfile(new CollectionEqualizationProfile());
         dedicatedProfileProvider.AddProfile(new StandardEqualizationProfile());
         this._internallyDefinedProviders.Add(dedicatedProfileProvider);
