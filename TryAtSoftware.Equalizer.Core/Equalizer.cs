@@ -15,8 +15,10 @@ public class Equalizer : IEqualizer
 
     public Equalizer()
     {
-        var standardProfileProvider = new DynamicProfileProvider((_, _) => new StandardEqualizationProfile());
-        this._internallyDefinedProviders.Add(standardProfileProvider);
+        var dedicatedProfileProvider = new DedicatedProfileProvider();
+        dedicatedProfileProvider.AddProfile(new CollectionEqualizationProfile());
+        dedicatedProfileProvider.AddProfile(new StandardEqualizationProfile());
+        this._internallyDefinedProviders.Add(dedicatedProfileProvider);
     }
 
     public void AssertEquality(object expected, object actual)
@@ -42,12 +44,12 @@ public class Equalizer : IEqualizer
 
     public bool AddProfileProvider(IEqualizationProfileProvider provider)
     {
-        if (provider is null)
-            return false;
+        if (provider is null) return false;
 
         this._providers.Add(provider);
         return true;
     }
 
-    private IEqualizationProfile GetProfile(object principal, object actual) => this._providers.ConcatenateWith(this._internallyDefinedProviders).IgnoreNullValues().Select(provider => provider.GetProfile(principal, actual)).FirstOrDefault(profile => profile is not null);
+    private IEqualizationProfile GetProfile(object expected, object actual)
+        => this._providers.ConcatenateWith(this._internallyDefinedProviders).IgnoreNullValues().Select(provider => provider.GetProfile(expected, actual)).FirstOrDefault(profile => profile is not null);
 }

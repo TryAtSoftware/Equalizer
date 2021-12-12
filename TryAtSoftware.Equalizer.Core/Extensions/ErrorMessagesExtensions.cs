@@ -3,48 +3,49 @@
 using System;
 using System.Text;
 using TryAtSoftware.Equalizer.Core.Interfaces;
-using TryAtSoftware.Equalizer.Core.Profiles.Complex.Rules;
 
-public static class ErrorMessages
+internal static class ErrorMessages
 {
-    public static string UnsuccessfulEqualization(this IEqualizationProfile equalizationProfile, object expected, object actual)
+    internal static string UnsuccessfulEqualization<T>(this T source, object expected, object actual, string description = null)
     {
-        if (equalizationProfile is null)
-            throw new ArgumentNullException(nameof(equalizationProfile));
+        if (source is null) throw new ArgumentNullException(nameof(source));
 
-        return UnsuccessfulEqualization(equalizationProfile.GetType().Name, expected, actual);
+        return UnsuccessfulEqualization(source.GetType().Name, expected, actual, description);
     }
 
-    public static string UnsuccessfulEqualization<TPrincipal, TSubordinate>(this IEqualizationRule<TPrincipal, TSubordinate> equalizationRule, object expected, object actual)
+    public static string UnsuccessfulDifferentiation<T>(this T source, object expected, object actual, string description = null)
     {
-        if (equalizationRule is null)
-            throw new ArgumentNullException(nameof(equalizationRule));
+        if (source is null) throw new ArgumentNullException(nameof(source));
 
-        return UnsuccessfulEqualization(equalizationRule.GetType().Name, expected, actual);
+        return UnsuccessfulDifferentiation(source.GetType().Name, expected, actual, description);
     }
 
-    public static string UnsuccessfulDifferentiation<TPrincipal, TSubordinate>(this IEqualizationRule<TPrincipal, TSubordinate> differentiationRule, object expected, object actual)
+    internal static string With(this string errorMessage, IEqualizationResult equalizationResult)
     {
-        if (differentiationRule is null)
-            throw new ArgumentNullException(nameof(differentiationRule));
+        var innerMessage = equalizationResult?.Message;
+        if (string.IsNullOrWhiteSpace(errorMessage) && string.IsNullOrWhiteSpace(innerMessage)) return string.Empty;
+        if (string.IsNullOrWhiteSpace(errorMessage)) return innerMessage;
+        if (string.IsNullOrWhiteSpace(innerMessage)) return errorMessage;
 
-        return UnsuccessfulDifferentiation(differentiationRule.GetType().Name, expected, actual);
-    }
+        var stringBuilder = new StringBuilder(errorMessage.Length + innerMessage.Length + 15);
+        stringBuilder.AppendLine(errorMessage);
 
-    private static string UnsuccessfulEqualization(string typeName, object expected, object actual)
-    {
-        var stringBuilder = new StringBuilder();
-        stringBuilder.AppendLine($"{typeName} could not assert the equality between the two values.");
-        stringBuilder.AppendLine($"Expected: {expected}");
-        stringBuilder.AppendLine($"Actual: {actual}");
+        stringBuilder.AppendLine("Inner message:");
+        stringBuilder.Append(innerMessage);
 
         return stringBuilder.ToString();
     }
 
-    private static string UnsuccessfulDifferentiation(string typeName, object expected, object actual)
+    private static string UnsuccessfulEqualization(string typeName, object expected, object actual, string description = null) => GenerateErrorMessage($"{typeName} could not assert the equality between the two values.", description, expected, actual);
+
+    private static string UnsuccessfulDifferentiation(string typeName, object expected, object actual, string description = null) => GenerateErrorMessage($"{typeName} could not assert the inequality between the two values.", description, expected, actual);
+
+    private static string GenerateErrorMessage(string header, string description, object expected, object actual)
     {
         var stringBuilder = new StringBuilder();
-        stringBuilder.AppendLine($"{typeName} could not assert the inequality between the two values.");
+        if (!string.IsNullOrWhiteSpace(header)) stringBuilder.AppendLine(header);
+        if (!string.IsNullOrWhiteSpace(description)) stringBuilder.AppendLine(description);
+
         stringBuilder.AppendLine($"Expected: {expected}");
         stringBuilder.AppendLine($"Actual: {actual}");
 
