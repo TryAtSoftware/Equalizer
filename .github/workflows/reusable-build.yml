@@ -67,10 +67,12 @@ jobs:
       run: ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
       
     - name: Publish projects
+      if: ${{ inputs.publish_artifacts }}
       run: dotnet publish --no-build --configuration "${{ inputs.configuration }}" --output "./_artifacts"
     
     - name: Upload artifacts
+      if: ${{ inputs.publish_artifacts }}
       uses: actions/upload-artifact@v2
-        with:
-          name: equalizer_projects
-          path: "./_artifacts"
+      with:
+        name: equalizer_projects
+        path: "./_artifacts"
