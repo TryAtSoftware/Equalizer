@@ -5,5 +5,5 @@ on:
     branches: [main]
 
 jobs:
-  build:
-    uses: "./.github/workflows/reusable-build.yml"
+  call-workflow:
+    uses: octo-org/example-repo/.github/workflows/workflow-A.yml@v1
