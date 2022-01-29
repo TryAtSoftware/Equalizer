@@ -7,5 +7,3 @@ on:
 jobs:
   build:
     uses: "./.github/workflows/reusable-build.yml"
-    secrets:
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
