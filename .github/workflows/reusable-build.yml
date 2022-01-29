@@ -10,8 +10,6 @@ on:
         type: boolean
         default: false
     secrets:
-      GITHUB_TOKEN:
-        required: true
       SONAR_TOKEN:
         required: true
 
@@ -20,7 +18,8 @@ jobs:
     name: Validate core functionality
     runs-on: ubuntu-latest
     env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      GITHUB_TOKEN: ${{ github.token }}
 
     steps:
     - uses: actions/checkout@v2
