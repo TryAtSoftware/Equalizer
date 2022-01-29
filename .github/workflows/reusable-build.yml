@@ -1,4 +1,4 @@
-name: Reusable build workflow
+name: Reusable workflow example
 
 on:
   workflow_call:
@@ -9,21 +9,9 @@ on:
         default: Release
 
 jobs:
-  build:
-    name: Build the solution
+  example_job:
+    name: Pass input and secrets to my-action
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-      with:
-          fetch-depth: 0
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build the solution
-      run: dotnet build --no-restore --configuration "${{ inputs.configuration }}"
-    - name: Test the solution
-      run: dotnet test --no-build --configuration "${{ inputs.configuration }}"
+      - name: Test
+        run: echo "Hello"
