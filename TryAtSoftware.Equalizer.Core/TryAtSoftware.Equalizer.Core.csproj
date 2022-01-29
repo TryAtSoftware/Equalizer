@@ -18,7 +18,7 @@
     <ItemGroup>
         <PackageReference Include="JetBrains.Annotations" Version="2022.1.0-eap2" PrivateAssets="all" />
         <PackageReference Include="SonarAnalyzer.CSharp" Version="8.34.0.42011" PrivateAssets="all" />
-        <PackageReference Include="TryAtSoftware.Extensions.Collections" Version="1.0.0-alpha.2" />
+        <PackageReference Include="TryAtSoftware.Extensions.Collections" Version="1.0.0-alpha.2" PrivateAssets="all" />
     </ItemGroup>
 
 </Project>
