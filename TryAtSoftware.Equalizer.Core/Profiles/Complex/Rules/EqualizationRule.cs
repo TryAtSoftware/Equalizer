@@ -19,10 +19,10 @@ public class EqualizationRule<TPrincipal, TSubordinate> : IEqualizationRule<TPri
         this._actualValueRetrieval = actualValueRetrieval ?? throw new ArgumentNullException(nameof(actualValueRetrieval));
     }
 
-    public IEqualizationResult Equalize(TPrincipal expected, TSubordinate actual, IEqualizationOptions options)
+    public IEqualizationResult Equalize(TPrincipal principal, TSubordinate subordinate, IEqualizationOptions options)
     {
-        var expectedValue = this._expectedValueRetrieval(expected);
-        var actualValue = this._actualValueRetrieval(actual);
+        var expectedValue = this._expectedValueRetrieval(principal);
+        var actualValue = this._actualValueRetrieval(subordinate);
 
         return options.Equalize(expectedValue, actualValue);
     }

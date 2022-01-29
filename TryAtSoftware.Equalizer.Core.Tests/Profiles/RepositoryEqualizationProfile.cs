@@ -9,10 +9,10 @@ public class RepositoryEqualizationProfile : ComplexEqualizationProfile<Reposito
 {
     public RepositoryEqualizationProfile()
     {
+        this.Extend(new CommonIdentifiableEqualizationProfile<RepositoryPrototype, Repository, int>());
         this.Equalize(rp => rp.Name, r => r.Name);
         this.Equalize(rp => rp.Description, r => r.Description);
         this.Equalize(5, r => r.OrganizationId);
-        this.Differentiate<int>(default, r => r.Id);
         this.Differentiate(rp => rp.Name, r => r.InternalName);
         this.Differentiate(Value.Empty, r => r.InternalName);
         this.Equalize(rp => rp.CommitMessages, r => r.InitialCommits);

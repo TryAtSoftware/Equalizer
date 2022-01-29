@@ -3,11 +3,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using TryAtSoftware.Equalizer.Core.Assertions;
-using TryAtSoftware.Equalizer.Core.Extensions;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 using TryAtSoftware.Equalizer.Core.ProfileProviders;
 using TryAtSoftware.Equalizer.Core.Profiles;
 using TryAtSoftware.Equalizer.Core.Profiles.Templates;
+using TryAtSoftware.Extensions.Collections;
 
 public class Equalizer : IEqualizer
 {
