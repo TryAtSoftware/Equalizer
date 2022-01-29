@@ -25,7 +25,7 @@ jobs:
     - name: Build
       run: dotnet build --no-restore --configuration "${{ env.CONFIGURATION }}"
 
-    - name: Pack 'Collection extensions'
+    - name: Pack 'Equalizer.Core'
       run: dotnet pack --no-build --configuration "${{ env.CONFIGURATION }}" ./TryAtSoftware.Equalizer.Core/TryAtSoftware.Equalizer.Core.csproj -o "${{ env.PACKAGES_DIRECTORY }}"
 
     - name: Publish all packages
