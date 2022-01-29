@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-public class Repository
+public class Repository : IIdentifiable<int>
 {
     public int Id { get; set; }
 

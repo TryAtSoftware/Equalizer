@@ -43,12 +43,15 @@ public class ComplexEqualizationProfile<TPrincipal, TSubordinate> : BaseTypedEqu
 
     protected void Differentiate<TValue>(TValue value, Func<TSubordinate, object> actualValueSelector) => this.Differentiate(_ => value, actualValueSelector);
 
-    protected bool AddRule(IEqualizationRule<TPrincipal, TSubordinate> equalizationRule)
+    protected void Extend(ComplexEqualizationProfile<TPrincipal, TSubordinate> commonProfile)
     {
-        if (equalizationRule is null)
-            return false;
+        if (commonProfile is null) return;
+        foreach (var commonProfileRule in commonProfile._rules) this.AddRule(commonProfileRule);
+    }
 
+    private void AddRule(IEqualizationRule<TPrincipal, TSubordinate> equalizationRule)
+    {
+        if (equalizationRule is null) return;
         this._rules.Add(equalizationRule);
-        return true;
     }
 }

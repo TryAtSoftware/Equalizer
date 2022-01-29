@@ -2,7 +2,7 @@
 
 using TryAtSoftware.Equalizer.Core.Interfaces;
 
-public interface IEqualizationRule<in T1, in T2>
+public interface IEqualizationRule<in TPrincipal, in TSubordinate>
 {
-    IEqualizationResult Equalize(T1 expected, T2 actual, IEqualizationOptions options);
+    IEqualizationResult Equalize(TPrincipal principal, TSubordinate subordinate, IEqualizationOptions options);
 }

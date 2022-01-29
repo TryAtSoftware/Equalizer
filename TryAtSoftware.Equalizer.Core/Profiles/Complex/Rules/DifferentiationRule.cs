@@ -19,10 +19,10 @@ public class DifferentiationRule<TPrincipal, TSubordinate> : IEqualizationRule<T
         this._actualValueRetrieval = actualValueRetrieval ?? throw new ArgumentNullException(nameof(actualValueRetrieval));
     }
 
-    public IEqualizationResult Equalize(TPrincipal expected, TSubordinate actual, IEqualizationOptions options)
+    public IEqualizationResult Equalize(TPrincipal principal, TSubordinate subordinate, IEqualizationOptions options)
     {
-        var expectedValue = this._expectedValueRetrieval(expected);
-        var actualValue = this._actualValueRetrieval(actual);
+        var expectedValue = this._expectedValueRetrieval(principal);
+        var actualValue = this._actualValueRetrieval(subordinate);
 
         var equalizationResult = options.Equalize(expectedValue, actualValue);
         if (!equalizationResult.IsSuccessful) return new SuccessfulEqualizationResult();
