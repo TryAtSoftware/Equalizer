@@ -19,9 +19,6 @@ jobs:
   build:
     name: Build the solution
     runs-on: ubuntu-latest
-    env:
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      GITHUB_TOKEN: ${{ github.token }}
 
     steps:
     - uses: actions/checkout@v2
