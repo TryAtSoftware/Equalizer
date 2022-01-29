@@ -1,12 +1,5 @@
-name: Reusable workflow example
-
 on:
   workflow_call:
-    inputs:
-      configuration:
-        required: false
-        type: string
-        default: Release
 
 jobs:
   example_job:
