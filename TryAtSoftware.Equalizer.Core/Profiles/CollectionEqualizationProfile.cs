@@ -33,8 +33,6 @@ public class CollectionEqualizationProfile : BaseTypedEqualizationProfile<IEnume
             }
         }
 
-        if (iteratedExpected.Count != iteratedActual.Count) return new UnsuccessfulEqualizationResult(this.UnsuccessfulEqualization(expected, actual, "Counts do not match"));
-
         for (var i = 0; i < iteratedExpected.Count; i++)
         {
             var expectedElement = iteratedExpected[i];
