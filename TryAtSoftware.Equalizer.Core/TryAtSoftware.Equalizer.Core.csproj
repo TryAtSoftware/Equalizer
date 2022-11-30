@@ -5,7 +5,7 @@
         <LangVersion>latest</LangVersion>
 
         <PackageId>TryAtSoftware.Equalizer</PackageId>
-        <Version>1.0.0-alpha.5</Version>
+        <Version>1.0.0-alpha.6</Version>
         <Authors>Tony Troeff</Authors>
         <RepositoryUrl>https://github.com/TryAtSoftware/Equalizer</RepositoryUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -16,8 +16,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="JetBrains.Annotations" Version="2022.1.0-eap2" PrivateAssets="all" />
-        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.34.0.42011" PrivateAssets="all" />
+        <PackageReference Include="JetBrains.Annotations" Version="2022.3.1" PrivateAssets="all" />
+        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.49.0.57237" PrivateAssets="all" />
         <PackageReference Include="TryAtSoftware.Extensions.Collections" Version="1.0.0-alpha.2" />
     </ItemGroup>
 </Project>
