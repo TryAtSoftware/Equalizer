@@ -12,8 +12,7 @@ public class CollectionEqualizationProfile : BaseTypedEqualizationProfile<IEnume
         if (expected is null && actual is null) return new SuccessfulEqualizationResult();
         if (expected is null || actual is null) return new UnsuccessfulEqualizationResult(this.UnsuccessfulEqualization(expected, actual));
 
-        var iteratedExpected = new List<object>();
-        var iteratedActual = new List<object>();
+        var iteratedValues = new List<(object Expected, object Actual)>();
 
         var expectedEnumerator = expected.GetEnumerator();
         var actualEnumerator = actual.GetEnumerator();
@@ -27,22 +26,20 @@ public class CollectionEqualizationProfile : BaseTypedEqualizationProfile<IEnume
             if (!hasMoreExpected && !hasMoreActual) canContinue = false;
             else if (hasMoreExpected != hasMoreActual) return new UnsuccessfulEqualizationResult(this.UnsuccessfulEqualization(expected, actual, "Counts do not match"));
             else
-            {
-                iteratedExpected.Add(expectedEnumerator.Current);
-                iteratedActual.Add(actualEnumerator.Current);
-            }
+                iteratedValues.Add((expectedEnumerator.Current, actualEnumerator.Current));
         }
 
-        for (var i = 0; i < iteratedExpected.Count; i++)
+        var index = 0;
+        foreach (var (expectedElement, actualElement) in iteratedValues)
         {
-            var expectedElement = iteratedExpected[i];
-            var actualElement = iteratedActual[i];
-
             var equalizationResult = options.Equalize(expectedElement, actualElement);
-            if (equalizationResult.IsSuccessful) continue;
+            if (!equalizationResult.IsSuccessful)
+            {
+                var errorMessage = this.UnsuccessfulEqualization(expected, actual, $"Element at index {index} do not match");
+                return new UnsuccessfulEqualizationResult(errorMessage.With(equalizationResult));
+            }
 
-            var errorMessage = this.UnsuccessfulEqualization(expected, actual, $"Element at index {i} do not match");
-            return new UnsuccessfulEqualizationResult(errorMessage.With(equalizationResult));
+            index++;
         }
 
         return new SuccessfulEqualizationResult();
