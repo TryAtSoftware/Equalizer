@@ -31,4 +31,18 @@ Or using the `dotnet CLI` from a terminal window:
 
 > dotnet add package TryAtSoftware.Equalizer
 
+## Introducing the `Equalizer`
+
+TODO #1
+
+### Asserting equality between two values
+
+TODO #2
+
+### Registering additional equalization profiles
+
+TODO #3
+
 ## Creating your first equalization profile
+
+TODO #4
