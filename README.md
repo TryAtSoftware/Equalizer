@@ -1,4 +1,10 @@
-[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=TryAtSoftware_Equalizer)](https://sonarcloud.io/dashboard?id=TryAtSoftware_Equalizer)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=TryAtSoftware_Equalizer&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=TryAtSoftware_Equalizer)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=TryAtSoftware_Equalizer&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=TryAtSoftware_Equalizer)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=TryAtSoftware_Equalizer&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=TryAtSoftware_Equalizer)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=TryAtSoftware_Equalizer&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=TryAtSoftware_Equalizer)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=TryAtSoftware_Equalizer&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=TryAtSoftware_Equalizer)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=TryAtSoftware_Equalizer&metric=bugs)](https://sonarcloud.io/summary/new_code?id=TryAtSoftware_Equalizer)
+
 [![Core validation](https://github.com/TryAtSoftware/Equalizer/actions/workflows/Core%20validation.yml/badge.svg)](https://github.com/TryAtSoftware/Equalizer/actions/workflows/Core%20validation.yml)
 
 # About the project
