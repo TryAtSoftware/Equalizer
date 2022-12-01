@@ -61,8 +61,4 @@ In order to assert equality between two values all you need to do is call the `A
 
 ### Registering additional equalization profiles
 
-TODO #3
-
 ## Creating your first equalization profile
-
-TODO #4
