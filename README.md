@@ -55,7 +55,9 @@ public abstract class MyBaseTest
 
 ### Asserting equality between two values
 
-TODO #2
+In order to assert equality between two values all you need to do is call the `AssertEquality` method of the previously instantiated `Equalizer`. The first parameter you should pass is the expected value and the second - the actual one. The `Equalizer` will then choose the most suitable equalization profile to execute the assertion.
+
+> We should note here that every equalization profile may work with values of different types. There are no restrictions about the type of equality that should be asserted (it all depends on the custom equalization profiles that are used). However, our library is developed with the presumption that two values of different types may be semantically equal and one should be able to assert that without the necessity of defining additional methods for conversions.
 
 ### Registering additional equalization profiles
 
