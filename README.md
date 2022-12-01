@@ -9,7 +9,7 @@
 
 # About the project
 
-`TryAtSoftware.Randomizer` is a library that should simplify the process of validating the equality between two values no matter of the complexity.
+`TryAtSoftware.Equalizer` is a library that should simplify the process of validating the equality between two values no matter of the complexity.
 We offer a set of methods and components that can be used to accomplish this goal. They are reusable and can be applied to every projects of yours.
 
 # About us
@@ -33,7 +33,25 @@ Or using the `dotnet CLI` from a terminal window:
 
 ## Introducing the `Equalizer`
 
-TODO #1
+The `Equalizer` class is the heart of this library. It exposes two methods - `AssertEquality` and `AddProfileProvider` (in the next two chapters, you can find out more anout both of them). We suggest instantiating this class for every test (as some of the custom equalization profiles may depend on contextual data) using a similar structure:
+
+```C#
+public abstract class MyBaseTest
+{
+    protected IEqualizer Equalizer { get; }
+
+    protected MyBaseTest()
+    {
+        var equalizer = new Equalizer();
+
+        // Here you can register additional equalization profile providers if necessary.
+        // var myProfileProvider = new MyProfileProvider();
+        // equalizer.AddProfileProvider(myPRofileProvider);
+
+        this.Equalizer = equalizer;
+    }
+}
+```
 
 ### Asserting equality between two values
 
