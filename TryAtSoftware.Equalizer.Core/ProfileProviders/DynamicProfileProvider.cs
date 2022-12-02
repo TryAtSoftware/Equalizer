@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 
@@ -16,5 +15,5 @@ public class DynamicProfileProvider : IEqualizationProfileProvider
         this._getProfiles = getProfiles ?? throw new ArgumentNullException(nameof(getProfiles));
     }
 
-    public IEqualizationProfile GetProfile(object principal, object actual) => this._getProfiles().FirstOrDefault(p => p is not null && p.CanExecuteFor(principal, actual));
+    public IEqualizationProfile GetProfile(object expected, object actual) => this._getProfiles().FirstExecutable(expected, actual);
 }
