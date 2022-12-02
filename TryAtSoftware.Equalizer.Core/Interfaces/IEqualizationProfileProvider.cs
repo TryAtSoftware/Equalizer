@@ -2,5 +2,5 @@
 
 public interface IEqualizationProfileProvider
 {
-    IEqualizationProfile GetProfile(object principal, object actual);
+    IEqualizationProfile GetProfile(object expected, object actual);
 }
