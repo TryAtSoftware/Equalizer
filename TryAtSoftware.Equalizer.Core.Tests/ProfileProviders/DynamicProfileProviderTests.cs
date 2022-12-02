@@ -14,7 +14,7 @@ public class DynamicProfileProviderTests
     [Fact]
     public void DynamicProfileProviderShouldReturnCorrectEqualizationProfile()
     {
-        var (allEqualizationProfiles, executableProfile) = ProfileProviderTestsCompanion.PrepareEqualizationProfileMultitude();
+        var (allEqualizationProfiles, executableProfile) = TestsCompanion.PrepareEqualizationProfileMultitude();
 
         var dynamicProfileProvider = new DynamicProfileProvider(() => allEqualizationProfiles);
         
@@ -25,7 +25,7 @@ public class DynamicProfileProviderTests
     [Fact]
     public void DynamicProfileProviderShouldNotReturnAnyEqualizationProfileIfNoneIsExecutableForTheProvidedInput()
     {
-        var (allEqualizationProfiles, executableProfile) = ProfileProviderTestsCompanion.PrepareEqualizationProfileMultitude();
+        var (allEqualizationProfiles, executableProfile) = TestsCompanion.PrepareEqualizationProfileMultitude();
 
         var dynamicProfileProvider = new DynamicProfileProvider(() => allEqualizationProfiles.Where(x => x != executableProfile));
         

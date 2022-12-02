@@ -1,11 +1,11 @@
-﻿namespace TryAtSoftware.Equalizer.Core.Tests.ProfileProviders;
+﻿namespace TryAtSoftware.Equalizer.Core.Tests;
 
 using System.Collections.Generic;
 using Moq;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 using TryAtSoftware.Randomizer.Core.Helpers;
 
-public static class ProfileProviderTestsCompanion
+public static class TestsCompanion
 {
     public static (IEnumerable<IEqualizationProfile> All, IEqualizationProfile Executable) PrepareEqualizationProfileMultitude()
     {
@@ -17,15 +17,20 @@ public static class ProfileProviderTestsCompanion
         for (var i = 0; i < profilesCount; i++)
         {
             var isExecutable = i == executableProfileIndex;
-            var profileMock = new Mock<IEqualizationProfile>();
-            profileMock.Setup(x => x.CanExecuteFor(It.IsAny<object>(), It.IsAny<object>())).Returns(isExecutable);
+            var profileInstance = MockEqualizationProfile(isExecutable);
 
-            var profileInstance = profileMock.Object;
             allEqualizationProfiles.Add(profileInstance);
-
             if (isExecutable) executableProfile = profileInstance;
         }
 
         return (allEqualizationProfiles, executableProfile);
+    }
+
+    public static IEqualizationProfile MockEqualizationProfile(bool isExecutable = false)
+    {
+        var profileMock = new Mock<IEqualizationProfile>();
+        profileMock.Setup(x => x.CanExecuteFor(It.IsAny<object>(), It.IsAny<object>())).Returns(isExecutable);
+
+        return profileMock.Object;
     }
 }
