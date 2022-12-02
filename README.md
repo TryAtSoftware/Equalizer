@@ -45,8 +45,7 @@ public abstract class MyBaseTest
         var equalizer = new Equalizer();
 
         // Here you can register additional equalization profile providers if necessary.
-        // var myProfileProvider = new MyProfileProvider();
-        // equalizer.AddProfileProvider(myPRofileProvider);
+        // equalizer.AddProfileProvider(<profile_provider>);
 
         this.Equalizer = equalizer;
     }
@@ -60,5 +59,36 @@ In order to assert equality between two values all you need to do is call the `A
 > We should note here that every equalization profile may work with values of different types. There are no restrictions about the type of equality that should be asserted (it all depends on the custom equalization profiles that are used). However, our library is developed with the presumption that two values of different types may be semantically equal and one should be able to assert that without the necessity of defining additional methods for conversions.
 
 ### Registering additional equalization profiles
+
+The registration of additional equalization profiles can happen in three different ways:
+
+- Using a `DedicatedProfileProvider`:
+
+This profile provider should be used whenever you know in advance the equalization profiles you want to register. Even the `Equalizer` class uses this in its core. Here is a short example:
+
+```C#
+var equalizer = new Equalizer();
+
+var dedicatedProfileProvider = new DedicatedProfileProvider();
+dedicatedProfileProvider.AddProfile(new MyCustomEqualizationProfile());
+
+equalizer.AddProfileProvider(dedicatedProfileProvider);
+```
+
+- Using a `DynamicProfileProvider`
+
+This profile provider should be used whenever you do not know in advance the exact multitude of equalization profiles that should be registered (or the registration of an equalization profile depends on some contextual data). For example, this profile provider can be used alongside with a DI container just like this:
+
+```C#
+static void RegisterEqualizationProfilesFromDI(Equalizer equalizer, IServiceProvider serviceProvider)
+{
+    var profileProvider = new DynamicProfileProvider(serviceProvider.GetServices<IEqualizationProfile>);
+    equalizer.AddProfileProvider(profileProvider);
+}
+```
+
+- Using a custom implementation of the `IEqualizationProfileProvider` interface.
+
+If you have some very special case so none of the existing profile providers can deal with it, of course, feel free to write your own custom implementation of the `IEqualizationProfileProvider` interface.
 
 ## Creating your first equalization profile
