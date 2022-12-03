@@ -26,6 +26,12 @@ public static class TestsCompanion
         return (allEqualizationProfiles, executableProfile);
     }
 
+    public static IEqualizationProfileProvider MockEqualizationProfileProvider()
+    {
+        var profileProviderMock = new Mock<IEqualizationProfileProvider>();
+        return profileProviderMock.Object;
+    }
+
     public static IEqualizationProfile MockEqualizationProfile(bool isExecutable = false)
     {
         var profileMock = new Mock<IEqualizationProfile>();

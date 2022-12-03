@@ -19,6 +19,25 @@ public class EqualizationTests
     }
 
     [Fact]
+    public void ProfileProviderShouldBeAddedSuccessfully()
+    {
+        var equalizer = PrepareEqualizer();
+
+        var profileProvider = TestsCompanion.MockEqualizationProfileProvider();
+        var addProfileProvider = equalizer.AddProfileProvider(profileProvider);
+        Assert.True(addProfileProvider);
+    }
+
+    [Fact]
+    public void InvalidProfileProviderShouldNotBeAddedSuccessfully()
+    {
+        var equalizer = PrepareEqualizer();
+
+        var addProfileProvider = equalizer.AddProfileProvider(null);
+        Assert.False(addProfileProvider);
+    }
+
+    [Fact]
     public void EqualizationShouldBeExecutedSuccessfullyForLogicallyEqualEntities()
     {
         var repositoryPrototype = PrepareRepositoryPrototype();
