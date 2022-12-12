@@ -1,6 +1,7 @@
 ﻿namespace TryAtSoftware.Equalizer.Core.Profiles.General;
 
 using TryAtSoftware.Equalizer.Core;
+using TryAtSoftware.Equalizer.Core.Extensions;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 using TryAtSoftware.Equalizer.Core.Profiles;
 using TryAtSoftware.Extensions.Collections;
@@ -18,7 +19,10 @@ public class GeneralEqualizationProfile<T> : BaseTypedEqualizationProfile<T, T>
             var actualValue = member.GetValue(actual);
 
             var result = options.Equalize(expectedValue, actualValue);
-            if (!result.IsSuccessful) return new UnsuccessfulEqualizationResult($"{memberName}: {result.Message}");
+            if (result.IsSuccessful) continue;
+
+            var errorMessage = this.UnsuccessfulEqualization(expectedValue, actualValue, $"Values for the {memberName} member differ.");
+            return new UnsuccessfulEqualizationResult(errorMessage.With(result));
         }
 
         return new SuccessfulEqualizationResult();
