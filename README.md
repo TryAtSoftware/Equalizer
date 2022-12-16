@@ -10,7 +10,26 @@
 # About the project
 
 `TryAtSoftware.Equalizer` is a library that should simplify the process of validating the equality between two values no matter of the complexity.
-We offer a set of methods and components that can be used to accomplish this goal. They are reusable and can be applied to every projects of yours.
+
+Maybe you are used to writing code like this (where you have methods asserting the equality between every common properties of two objects):
+
+```
+public static void AssertAreEqual(Person a, Person b)
+{
+    Assert.NotNull(a);
+    Assert.NotNull(b);
+
+    Assert.AreEqual(a.Id, b.Id);
+    Assert.AreEqual(a.FirstName, b.FirstName);
+    Assert.AreEqual(a.LastName, b.LastName);
+    // ... Assert all other propertes ...
+}
+```
+
+There's nothing wrong with this code and it is totally fine to use such methods. But there are also some situations that are more complex and this solution is not applicable. For example, if you need to assert the equality betwen two different types, two different types that are part of separate polymorphic hierarchies, different data structures containing entities of different types.
+
+Here comes our library! We offer a set of methods and components that can be used to accomplish this goal. They are reusable and can be applied to every projects of yours.
+
 
 # About us
 
