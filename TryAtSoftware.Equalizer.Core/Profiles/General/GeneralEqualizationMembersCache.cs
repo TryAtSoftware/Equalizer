@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq.Expressions;
 using System.Reflection;
 using TryAtSoftware.Equalizer.Core.Attributes;
 using TryAtSoftware.Extensions.Reflection;
@@ -20,13 +19,7 @@ internal static class GeneralEqualizationMembersCache<T>
         foreach (var (key, memberInfo) in membersBinder.MemberInfos)
         {
             if (memberInfo is not PropertyInfo propertyInfo) continue;
-            
-            var parameter = Expression.Parameter(typeof(T));
-            var accessPropertyValue = Expression.Property(parameter, propertyInfo);
-            var boxValue = Expression.Convert(accessPropertyValue, typeof(object));
-            var propertyAccessorLambda = Expression.Lambda<Func<T, object>>(boxValue, parameter);
-            
-            valueAccessors[key] = propertyAccessorLambda.Compile();
+            valueAccessors[key] = propertyInfo.ConstructPropertyAccessor<T, object>().Compile();
         }
 
         return new ReadOnlyDictionary<string, Func<T, object>>(valueAccessors);
