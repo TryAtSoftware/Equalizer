@@ -27,31 +27,31 @@ public class ComplexEqualizationProfile<TPrincipal, TSubordinate> : BaseTypedEqu
         return new SuccessfulEqualizationResult();
     }
 
-    protected void Equalize(Func<TPrincipal, object> expectedValueSelector, Func<TSubordinate, object> actualValueSelector)
+    protected void Equalize(Func<TPrincipal, object?> expectedValueSelector, Func<TSubordinate, object?> actualValueSelector)
     {
         var rule = new EqualizationRule<TPrincipal, TSubordinate>(expectedValueSelector, actualValueSelector);
         this.AddRule(rule);
     }
 
-    protected void Equalize<TValue>(TValue value, Func<TSubordinate, object> actualValueSelector) => this.Equalize(_ => value, actualValueSelector);
+    protected void Equalize<TValue>(TValue? value, Func<TSubordinate, object?> actualValueSelector) => this.Equalize(_ => value, actualValueSelector);
 
-    protected void Differentiate(Func<TPrincipal, object> expectedValueSelector, Func<TSubordinate, object> actualValueSelector)
+    protected void Differentiate(Func<TPrincipal, object?> expectedValueSelector, Func<TSubordinate, object?> actualValueSelector)
     {
         var rule = new DifferentiationRule<TPrincipal, TSubordinate>(expectedValueSelector, actualValueSelector);
         this.AddRule(rule);
     }
 
-    protected void Differentiate<TValue>(TValue value, Func<TSubordinate, object> actualValueSelector) => this.Differentiate(_ => value, actualValueSelector);
+    protected void Differentiate<TValue>(TValue? value, Func<TSubordinate, object?> actualValueSelector) => this.Differentiate(_ => value, actualValueSelector);
 
     protected void Extend(ComplexEqualizationProfile<TPrincipal, TSubordinate> commonProfile)
     {
-        if (commonProfile is null) return;
+        if (commonProfile is null) throw new ArgumentNullException(nameof(commonProfile));
         foreach (var commonProfileRule in commonProfile._rules) this.AddRule(commonProfileRule);
     }
 
     private void AddRule(IEqualizationRule<TPrincipal, TSubordinate> equalizationRule)
     {
-        if (equalizationRule is null) return;
+        if (equalizationRule is null) throw new ArgumentNullException(nameof(equalizationRule));
         this._rules.Add(equalizationRule);
     }
 }

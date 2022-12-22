@@ -2,5 +2,5 @@
 
 public interface IEqualizer
 {
-    void AssertEquality(object expected, object actual);
+    void AssertEquality(object? expected, object? actual);
 }

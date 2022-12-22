@@ -4,7 +4,7 @@ using System;
 
 internal static class Assert
 {
-    public static void NotNull(object value, string variableName)
+    public static void NotNull(object? value, string variableName)
     {
         if (value is null)
             throw new InvalidAssertException($"The variable {variableName} was not expected to be null.");
