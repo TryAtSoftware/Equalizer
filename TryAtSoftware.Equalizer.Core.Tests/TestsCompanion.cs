@@ -3,7 +3,6 @@
 using System.Collections.Generic;
 using Moq;
 using TryAtSoftware.Equalizer.Core.Interfaces;
-using TryAtSoftware.Equalizer.Core.ProfileProviders;
 using TryAtSoftware.Randomizer.Core.Helpers;
 
 public static class TestsCompanion
