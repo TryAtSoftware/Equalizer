@@ -1,5 +1,6 @@
 ﻿namespace TryAtSoftware.Equalizer.Core.Tests.ProfileProviders;
 
+using System;
 using System.Linq;
 using TryAtSoftware.Equalizer.Core.ProfileProviders;
 using Xunit;
@@ -34,9 +35,8 @@ public class DedicatedProfileProviderTests
     public void InvalidEqualizationProfileShouldNotBeAddedSuccessfully()
     {
         var dedicatedProfileProvider = new DedicatedProfileProvider();
-        
-        var addResult = dedicatedProfileProvider.AddProfile(null);
-        Assert.False(addResult);
+
+        Assert.Throws<ArgumentNullException>(() => dedicatedProfileProvider.AddProfile(null!));
     }
 
     [Fact]
@@ -44,8 +44,10 @@ public class DedicatedProfileProviderTests
     {
         var dedicatedProfileProvider = new DedicatedProfileProvider();
 
-        var profile = TestsCompanion.MockEqualizationProfile();
-        var addResult = dedicatedProfileProvider.AddProfile(profile);
-        Assert.True(addResult);
+        var profile = TestsCompanion.MockEqualizationProfile(isExecutable: true);
+        dedicatedProfileProvider.AddProfile(profile);
+
+        var retrievedProfile = dedicatedProfileProvider.GetProfile(null, null);
+        Assert.Same(profile, retrievedProfile);
     }
 }
