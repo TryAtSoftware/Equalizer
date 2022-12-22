@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 
 public class DynamicProfileProvider : IEqualizationProfileProvider
