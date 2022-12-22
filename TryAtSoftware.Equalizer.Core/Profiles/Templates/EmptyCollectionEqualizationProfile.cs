@@ -14,5 +14,5 @@ public class EmptyCollectionEqualizationProfile : BaseTypedEqualizationProfile<E
         return new UnsuccessfulEqualizationResult(this.UnsuccessfulEqualization(expected, actual));
     }
 
-    protected override bool AllowNullSubordinate => true;
+    protected override bool AllowNullActual => true;
 }
