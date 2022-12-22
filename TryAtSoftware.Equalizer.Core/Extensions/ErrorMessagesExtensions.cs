@@ -46,8 +46,8 @@ internal static class ErrorMessages
         if (!string.IsNullOrWhiteSpace(header)) stringBuilder.AppendLine(header);
         if (!string.IsNullOrWhiteSpace(description)) stringBuilder.AppendLine(description);
 
-        stringBuilder.Append($"Expected: {expected}");
-        stringBuilder.AppendLine($"Actual: {actual}");
+        stringBuilder.Append($"Expected: {expected.ToNormalizedString()}");
+        stringBuilder.AppendLine($"Actual: {actual.ToNormalizedString()}");
 
         return stringBuilder.ToString();
     }

@@ -6,9 +6,9 @@ using TryAtSoftware.Equalizer.Core.Extensions;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 using TryAtSoftware.Equalizer.Core.Templates;
 
-public class EmptyCollectionEqualizationProfile : BaseTypedEqualizationProfile<EmptyValueTemplate, IEnumerable<object>>
+public class EmptyCollectionEqualizationProfile : BaseTypedEqualizationProfile<EmptyValueTemplate, IEnumerable<object>?>
 {
-    public override IEqualizationResult Equalize(EmptyValueTemplate expected, IEnumerable<object> actual, IEqualizationOptions options)
+    public override IEqualizationResult Equalize(EmptyValueTemplate expected, IEnumerable<object>? actual, IEqualizationOptions options)
     {
         if (actual is null || !actual.Any()) return new SuccessfulEqualizationResult();
         return new UnsuccessfulEqualizationResult(this.UnsuccessfulEqualization(expected, actual));
