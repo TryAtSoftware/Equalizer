@@ -10,6 +10,9 @@ public class ComplexEqualizationProfile<TExpected, TActual> : BaseTypedEqualizat
 {
     private readonly List<IEqualizationRule<TExpected, TActual>> _rules = new();
 
+    protected sealed override bool AllowNullExpected => false;
+    protected sealed override bool AllowNullActual => false;
+
     public override IEqualizationResult Equalize(TExpected expected, TActual actual, IEqualizationOptions options)
     {
         if (expected is null && actual is null) return new SuccessfulEqualizationResult();

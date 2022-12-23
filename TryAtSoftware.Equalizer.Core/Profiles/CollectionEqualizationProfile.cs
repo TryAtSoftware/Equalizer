@@ -7,11 +7,8 @@ using TryAtSoftware.Equalizer.Core.Interfaces;
 
 public class CollectionEqualizationProfile : BaseTypedEqualizationProfile<IEnumerable, IEnumerable>
 {
-    public override IEqualizationResult Equalize(IEnumerable? expected, IEnumerable? actual, IEqualizationOptions options)
+    public override IEqualizationResult Equalize(IEnumerable expected, IEnumerable actual, IEqualizationOptions options)
     {
-        if (expected is null && actual is null) return new SuccessfulEqualizationResult();
-        if (expected is null || actual is null) return new UnsuccessfulEqualizationResult(this.UnsuccessfulEqualization(expected, actual));
-
         var iteratedValues = new List<(object Expected, object Actual)>();
 
         var expectedEnumerator = expected.GetEnumerator();
