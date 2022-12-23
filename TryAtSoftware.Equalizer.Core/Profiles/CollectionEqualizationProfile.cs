@@ -9,9 +9,6 @@ public class CollectionEqualizationProfile : BaseTypedEqualizationProfile<IEnume
 {
     public override IEqualizationResult Equalize(IEnumerable expected, IEnumerable actual, IEqualizationOptions options)
     {
-        if (expected is null && actual is null) return new SuccessfulEqualizationResult();
-        if (expected is null || actual is null) return new UnsuccessfulEqualizationResult(this.UnsuccessfulEqualization(expected, actual));
-
         var iteratedValues = new List<(object Expected, object Actual)>();
 
         var expectedEnumerator = expected.GetEnumerator();

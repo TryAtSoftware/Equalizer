@@ -21,20 +21,19 @@ public class EqualizationTests
     [Fact]
     public void ProfileProviderShouldBeAddedSuccessfully()
     {
-        var equalizer = PrepareEqualizer();
-
+        var equalizer = new Equalizer();
         var profileProvider = TestsCompanion.MockEqualizationProfileProvider();
-        var addProfileProvider = equalizer.AddProfileProvider(profileProvider);
-        Assert.True(addProfileProvider);
+        equalizer.AddProfileProvider(profileProvider);
+
+        var registeredProfileProvider = Assert.Single(equalizer.CustomProfileProviders);
+        Assert.Same(profileProvider, registeredProfileProvider);
     }
 
     [Fact]
     public void InvalidProfileProviderShouldNotBeAddedSuccessfully()
     {
-        var equalizer = PrepareEqualizer();
-
-        var addProfileProvider = equalizer.AddProfileProvider(null);
-        Assert.False(addProfileProvider);
+        var equalizer = new Equalizer();
+        Assert.Throws<ArgumentNullException>(() => equalizer.AddProfileProvider(null!));
     }
 
     [Fact]
