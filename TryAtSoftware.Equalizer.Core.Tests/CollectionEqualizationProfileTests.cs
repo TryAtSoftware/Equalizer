@@ -9,13 +9,12 @@ using Xunit;
 public class CollectionEqualizationProfileTests
 {
     [Fact]
-    public void NullCollectionsShouldBeEqualizedSuccessfully()
+    public void NullCollectionsShouldNotBeEqualized()
     {
         var profile = InstantiateProfile();
-        var equalizationOptionsMock = EqualizationOptionMocks.GetNew();
-
-        var equalizationResult = profile.Equalize(null, null, equalizationOptionsMock.Object);
-        Assert.True(equalizationResult.IsSuccessful);
+        Assert.False(profile.CanExecuteFor(Array.Empty<int>(), null));
+        Assert.False(profile.CanExecuteFor(null, null));
+        Assert.False(profile.CanExecuteFor(null, Array.Empty<int>()));
     }
 
     [Fact]
