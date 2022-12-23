@@ -9,12 +9,12 @@ public class EqualizationOptions : IEqualizationOptions
 
     public EqualizationOptions(Type principalType, Type subordinateType, Func<object?, object?, IEqualizationResult> equalize)
     {
-        this.PrincipalType = principalType ?? throw new ArgumentNullException(nameof(principalType));
-        this.SubordinateType = subordinateType ?? throw new ArgumentNullException(nameof(subordinateType));
+        this.ExpectedType = principalType ?? throw new ArgumentNullException(nameof(principalType));
+        this.ActualType = subordinateType ?? throw new ArgumentNullException(nameof(subordinateType));
         this._equalize = equalize ?? throw new ArgumentNullException(nameof(equalize));
     }
 
-    public Type PrincipalType { get; }
-    public Type SubordinateType { get; }
+    public Type ExpectedType { get; }
+    public Type ActualType { get; }
     public IEqualizationResult Equalize(object? expected, object? actual) => this._equalize(expected, actual);
 }
