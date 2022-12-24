@@ -7,10 +7,19 @@ using System.Reflection;
 using TryAtSoftware.Extensions.Reflection;
 using TryAtSoftware.Extensions.Reflection.Interfaces;
 
+/// <summary>
+/// A standard implementation of the <see cref="IGeneralEqualizationContext{T}"/> interface.
+/// </summary>
+/// <typeparam name="T">The concrete entity type for the general equalization process.</typeparam>
 public class GeneralEqualizationContext<T> : IGeneralEqualizationContext<T>
 {
     internal static GeneralEqualizationContext<T> Instance { get; } = Initialize();
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GeneralEqualizationContext{T}"/> class.
+    /// </summary>
+    /// <param name="membersBinder">An <see cref="IMembersBinder"/> instance exposing all members corresponding to the segments of <typeparamref name="T"/> that should be equalized.</param>
+    /// <exception cref="InvalidOperationException">Thrown if the provided <paramref name="membersBinder"/> operates with a type different than <typeparamref name="T"/>.</exception>
     public GeneralEqualizationContext(IMembersBinder membersBinder)
     {
         if (membersBinder is null) throw new ArgumentNullException(nameof(membersBinder));
@@ -26,6 +35,7 @@ public class GeneralEqualizationContext<T> : IGeneralEqualizationContext<T>
         this.ValueAccessors = new ReadOnlyDictionary<string, Func<T, object>>(valueAccessors);
     }
 
+    /// <inheritdoc />
     public IReadOnlyDictionary<string, Func<T, object>> ValueAccessors { get; }
 
     private static GeneralEqualizationContext<T> Initialize()

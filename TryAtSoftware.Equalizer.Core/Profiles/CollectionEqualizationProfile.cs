@@ -5,9 +5,13 @@ using System.Collections.Generic;
 using TryAtSoftware.Equalizer.Core.Extensions;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 
+/// <summary>
+/// An implementation of the <see cref="IEqualizationProfile"/> interface responsible for equalizing two collections.
+/// </summary>
 public class CollectionEqualizationProfile : BaseTypedEqualizationProfile<IEnumerable, IEnumerable>
 {
-    public override IEqualizationResult Equalize(IEnumerable expected, IEnumerable actual, IEqualizationOptions options)
+    /// <inheritdoc />
+    protected override IEqualizationResult Equalize(IEnumerable expected, IEnumerable actual, IEqualizationOptions options)
     {
         var iteratedValues = new List<(object Expected, object Actual)>();
 
