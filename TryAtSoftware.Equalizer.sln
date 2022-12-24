@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TryAtSoftware.Equalizer.Core.Tests", "TryAtSoftware.Equalizer.Core.Tests\TryAtSoftware.Equalizer.Core.Tests.csproj", "{2F58AFB5-734F-49B2-BE73-36BA96D51DBF}"
