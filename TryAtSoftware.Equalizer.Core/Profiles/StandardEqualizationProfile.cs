@@ -3,6 +3,10 @@
 using TryAtSoftware.Equalizer.Core.Extensions;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 
+/// <summary>
+/// A standard implementation of the <see cref="IEqualizationProfile"/> interface.
+/// </summary>
+/// <remarks>This equalization profile will check for equality using the <see cref="object.Equals(object)"/> method.</remarks>
 public class StandardEqualizationProfile : IEqualizationProfile
 {
     /// <inheritdoc />

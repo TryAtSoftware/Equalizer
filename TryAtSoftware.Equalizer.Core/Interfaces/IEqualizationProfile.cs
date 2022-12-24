@@ -19,6 +19,6 @@ public interface IEqualizationProfile
     /// <param name="expected">The expected object instance.</param>
     /// <param name="actual">The actual object instance.</param>
     /// <param name="options">An <see cref="IEqualizationOptions"/> instance exposing additional information about the equalization process.</param>
-    /// <returns></returns>
+    /// <returns>Returns a subsequently built <see cref="IEqualizationResult"/> instance containing information about the additionally executed equalization.</returns>
     IEqualizationResult Equalize(object? expected, object? actual, IEqualizationOptions options);
 }
