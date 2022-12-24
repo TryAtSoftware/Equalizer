@@ -14,7 +14,7 @@ public class GeneralEqualizationProfile<T> : BaseTypedEqualizationProfile<T, T>
         this._generalEqualizationContext = generalEqualizationContext ?? GeneralEqualizationContext<T>.Instance;
     }
 
-    public override IEqualizationResult Equalize(T expected, T actual, IEqualizationOptions options)
+    protected override IEqualizationResult Equalize(T expected, T actual, IEqualizationOptions options)
     {
         foreach (var (memberName, valueSelector) in this._generalEqualizationContext.ValueAccessors.OrEmptyIfNull().Where(x => x.Value is not null))
         {

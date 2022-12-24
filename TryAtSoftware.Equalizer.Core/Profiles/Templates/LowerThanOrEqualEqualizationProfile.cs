@@ -7,7 +7,7 @@ using TryAtSoftware.Equalizer.Core.Templates;
 
 public class LowerThanOrEqualEqualizationProfile : BaseTypedEqualizationProfile<LowerThanOrEqualValueTemplate, IComparable>
 {
-    public override IEqualizationResult Equalize(LowerThanOrEqualValueTemplate expected, IComparable actual, IEqualizationOptions options)
+    protected override IEqualizationResult Equalize(LowerThanOrEqualValueTemplate expected, IComparable actual, IEqualizationOptions options)
     {
         if (actual.CompareTo(expected.Value) > 0)
             return new UnsuccessfulEqualizationResult(this.UnsuccessfulEqualization(expected, actual));

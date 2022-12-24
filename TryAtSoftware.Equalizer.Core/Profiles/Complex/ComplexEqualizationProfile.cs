@@ -13,7 +13,7 @@ public class ComplexEqualizationProfile<TExpected, TActual> : BaseTypedEqualizat
     protected sealed override bool AllowNullExpected => false;
     protected sealed override bool AllowNullActual => false;
 
-    public override IEqualizationResult Equalize(TExpected expected, TActual actual, IEqualizationOptions options)
+    protected override IEqualizationResult Equalize(TExpected expected, TActual actual, IEqualizationOptions options)
     {
         if (expected is null && actual is null) return new SuccessfulEqualizationResult();
         if (expected is null || actual is null) return new UnsuccessfulEqualizationResult(this.UnsuccessfulEqualization(expected, actual));

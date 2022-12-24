@@ -7,7 +7,7 @@ using TryAtSoftware.Equalizer.Core.Interfaces;
 
 public class CollectionEqualizationProfile : BaseTypedEqualizationProfile<IEnumerable, IEnumerable>
 {
-    public override IEqualizationResult Equalize(IEnumerable expected, IEnumerable actual, IEqualizationOptions options)
+    protected override IEqualizationResult Equalize(IEnumerable expected, IEnumerable actual, IEqualizationOptions options)
     {
         var iteratedValues = new List<(object Expected, object Actual)>();
 

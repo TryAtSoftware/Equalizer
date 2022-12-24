@@ -3,17 +3,22 @@
 using TryAtSoftware.Equalizer.Core.Assertions;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 
-public abstract class BaseTypedEqualizationProfile<TExpected, TActual> : BaseEqualizationProfile, IEqualizationProfile<TExpected, TActual>
+public abstract class BaseTypedEqualizationProfile<TExpected, TActual> : IEqualizationProfile
 {
-    public override bool CanExecuteFor(object? a, object? b)
+    protected virtual bool AllowNullExpected => false;
+    protected virtual bool AllowNullActual => false;
+
+    /// <inheritdoc />
+    public bool CanExecuteFor(object? expected, object? actual)
     {
-        if (a is not TExpected && (a is not null || !this.AllowNullExpected)) return false;
-        if (b is not TActual && (b is not null || !this.AllowNullActual)) return false;
+        if (expected is not TExpected && (expected is not null || !this.AllowNullExpected)) return false;
+        if (actual is not TActual && (actual is not null || !this.AllowNullActual)) return false;
 
         return true;
     }
 
-    protected override IEqualizationResult EqualizeInternally(object? expected, object? actual, IEqualizationOptions options)
+    /// <inheritdoc />
+    public IEqualizationResult Equalize(object? expected, object? actual, IEqualizationOptions options)
     {
         var typedExpected = this.AllowNullExpected && expected is null ? (TExpected)expected! : Assert.OfType<TExpected>(expected, nameof(expected));
         var typedActual = this.AllowNullActual && actual is null ? (TActual)actual! : Assert.OfType<TActual>(actual, nameof(actual));
@@ -22,8 +27,5 @@ public abstract class BaseTypedEqualizationProfile<TExpected, TActual> : BaseEqu
         return this.Equalize(typedExpected, typedActual, options);
     }
 
-    public abstract IEqualizationResult Equalize(TExpected expected, TActual actual, IEqualizationOptions options);
-
-    protected virtual bool AllowNullExpected => false;
-    protected virtual bool AllowNullActual => false;
+    protected abstract IEqualizationResult Equalize(TExpected expected, TActual actual, IEqualizationOptions options);
 }
