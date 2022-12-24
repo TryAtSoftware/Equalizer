@@ -10,7 +10,7 @@ using Xunit;
 public class GeneralEqualizationContextTests
 {
     [Fact]
-    public void GeneralEqualizationContextMustNotBeInstantiatedWithoutMembersBinder() => Assert.Throws<ArgumentNullException>(() => new GeneralEqualizationContext<Shop>(null));
+    public void GeneralEqualizationContextMustNotBeInstantiatedWithoutMembersBinder() => Assert.Throws<ArgumentNullException>(() => new GeneralEqualizationContext<Shop>(null!));
 
     [Fact]
     public void GeneralEqualizationContextMustNotBeInstantiatedWithInvalidMembersBinder()
