@@ -1,8 +1,8 @@
-﻿namespace TryAtSoftware.Equalizer.Core.Tests.Models;
+﻿namespace TryAtSoftware.Equalizer.Core.Tests.Models.VersionControl;
 
 using System.Collections.Generic;
 
-public class RepositoryPrototype
+public class CodeRepositoryPrototype
 {
     public string Name { get; set; }
     public string Description { get; set; }
