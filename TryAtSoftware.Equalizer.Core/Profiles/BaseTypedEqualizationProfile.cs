@@ -3,27 +3,54 @@
 using TryAtSoftware.Equalizer.Core.Assertions;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 
-public abstract class BaseTypedEqualizationProfile<TPrincipal, TSubordinate> : BaseEqualizationProfile, IEqualizationProfile<TPrincipal, TSubordinate>
+/// <summary>
+/// An abstract class that should be inherited by any class implementing the <see cref="IEqualizationProfile"/> interface for a concrete pair of the types <typeparamref name="TExpected"/> and <typeparamref name="TActual"/>.
+/// </summary>
+/// <typeparam name="TExpected">The type of the expected value.</typeparam>
+/// <typeparam name="TActual">The type of the actual value.</typeparam>
+public abstract class BaseTypedEqualizationProfile<TExpected, TActual> : IEqualizationProfile
 {
-    public override bool CanExecuteFor(object a, object b)
+    /// <summary>
+    /// Gets a value indicating whether or not the expected value can be null.
+    /// </summary>
+    /// <remarks>
+    /// If the value of this property should be true, we suggest using nullable reference types when this is possible.
+    /// </remarks>
+    protected virtual bool AllowNullExpected => false;
+    
+    /// <summary>
+    /// Gets a value indicating whether or not the actual value can be null.
+    /// </summary>
+    /// <remarks>
+    /// If the value of this property should be true, we suggest using nullable reference types when this is possible.
+    /// </remarks>
+    protected virtual bool AllowNullActual => false;
+
+    /// <inheritdoc />
+    public bool CanExecuteFor(object? expected, object? actual)
     {
-        if (a is not TPrincipal && (a is not null || !this.AllowNullPrincipal)) return false;
-        if (b is not TSubordinate && (b is not null || !this.AllowNullSubordinate)) return false;
+        if (expected is not TExpected && (expected is not null || !this.AllowNullExpected)) return false;
+        if (actual is not TActual && (actual is not null || !this.AllowNullActual)) return false;
 
         return true;
     }
 
-    protected override IEqualizationResult EqualizeInternally(object expected, object actual, IEqualizationOptions options)
+    /// <inheritdoc />
+    public IEqualizationResult Equalize(object? expected, object? actual, IEqualizationOptions options)
     {
-        var typedExpected = this.AllowNullPrincipal ? (TPrincipal)expected : Assert.OfType<TPrincipal>(expected, nameof(expected));
-        var typedActual = this.AllowNullSubordinate ? (TSubordinate)actual : Assert.OfType<TSubordinate>(actual, nameof(actual));
+        var typedExpected = this.AllowNullExpected && expected is null ? (TExpected)expected! : Assert.OfType<TExpected>(expected, nameof(expected));
+        var typedActual = this.AllowNullActual && actual is null ? (TActual)actual! : Assert.OfType<TActual>(actual, nameof(actual));
         Assert.NotNull(options, nameof(options));
 
         return this.Equalize(typedExpected, typedActual, options);
     }
 
-    public abstract IEqualizationResult Equalize(TPrincipal expected, TSubordinate actual, IEqualizationOptions options);
-
-    protected virtual bool AllowNullPrincipal => false;
-    protected virtual bool AllowNullSubordinate => false;
+    /// <summary>
+    /// Use this method to equalize the <paramref name="expected"/> and <paramref name="actual"/> values.
+    /// </summary>
+    /// <param name="expected">The expected <typeparamref name="TExpected"/> instance.</param>
+    /// <param name="actual">The actual <typeparamref name="TActual"/> instance.</param>
+    /// <param name="options">An <see cref="IEqualizationOptions"/> instance exposing additional information about the equalization process.</param>
+    /// <returns>Returns a subsequently built <see cref="IEqualizationResult"/> instance containing information about the additionally executed equalization.</returns>
+    protected abstract IEqualizationResult Equalize(TExpected expected, TActual actual, IEqualizationOptions options);
 }

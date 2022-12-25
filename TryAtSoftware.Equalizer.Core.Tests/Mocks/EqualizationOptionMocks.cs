@@ -12,8 +12,8 @@ public static class EqualizationOptionMocks
     {
         var equalizationOptionsMock = new Mock<IEqualizationOptions>();
         equalizationOptionsMock.Setup(eo => eo.Equalize(It.IsAny<object>(), It.IsAny<object>())).Returns(internalEqualization);
-        equalizationOptionsMock.Setup(eo => eo.PrincipalType).Returns(typeof(object));
-        equalizationOptionsMock.Setup(eo => eo.SubordinateType).Returns(typeof(object));
+        equalizationOptionsMock.Setup(eo => eo.ExpectedType).Returns(typeof(object));
+        equalizationOptionsMock.Setup(eo => eo.ActualType).Returns(typeof(object));
         return equalizationOptionsMock;
     }
 }

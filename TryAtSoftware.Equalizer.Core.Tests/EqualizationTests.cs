@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TryAtSoftware.Equalizer.Core.Assertions;
 using TryAtSoftware.Equalizer.Core.ProfileProviders;
-using TryAtSoftware.Equalizer.Core.Tests.Models;
+using TryAtSoftware.Equalizer.Core.Tests.Models.VersionControl;
 using TryAtSoftware.Equalizer.Core.Tests.Profiles;
 using Xunit;
 
@@ -21,27 +21,26 @@ public class EqualizationTests
     [Fact]
     public void ProfileProviderShouldBeAddedSuccessfully()
     {
-        var equalizer = PrepareEqualizer();
-
+        var equalizer = new Equalizer();
         var profileProvider = TestsCompanion.MockEqualizationProfileProvider();
-        var addProfileProvider = equalizer.AddProfileProvider(profileProvider);
-        Assert.True(addProfileProvider);
+        equalizer.AddProfileProvider(profileProvider);
+
+        var registeredProfileProvider = Assert.Single(equalizer.CustomProfileProviders);
+        Assert.Same(profileProvider, registeredProfileProvider);
     }
 
     [Fact]
     public void InvalidProfileProviderShouldNotBeAddedSuccessfully()
     {
-        var equalizer = PrepareEqualizer();
-
-        var addProfileProvider = equalizer.AddProfileProvider(null);
-        Assert.False(addProfileProvider);
+        var equalizer = new Equalizer();
+        Assert.Throws<ArgumentNullException>(() => equalizer.AddProfileProvider(null!));
     }
 
     [Fact]
     public void EqualizationShouldBeExecutedSuccessfullyForLogicallyEqualEntities()
     {
         var repositoryPrototype = PrepareRepositoryPrototype();
-        var repository = new Repository();
+        var repository = new CodeRepository();
         PrepareRepository(repository);
 
         var equalizer = PrepareEqualizer();
@@ -50,11 +49,11 @@ public class EqualizationTests
 
     [Theory]
     [MemberData(nameof(GetChanges))]
-    public void EqualizationShouldBeExecutedSuccessfullyForLogicallyUnequalEntities(Action<Repository> change)
+    public void EqualizationShouldBeExecutedSuccessfullyForLogicallyUnequalEntities(Action<CodeRepository> change)
     {
         Assert.NotNull(change);
         var repositoryPrototype = PrepareRepositoryPrototype();
-        var repository = new Repository();
+        var repository = new CodeRepository();
         PrepareRepository(repository);
 
         change(repository);
@@ -67,7 +66,7 @@ public class EqualizationTests
     public void EqualizationShouldIgnoreMembersThatAreNotConfigured()
     {
         var repositoryPrototype = PrepareRepositoryPrototype();
-        var extendedRepository = new ExtendedRepository();
+        var extendedRepository = new ExtendedCodeRepository();
         PrepareRepository(extendedRepository);
         extendedRepository.CreationTime = DateTime.Today;
 
@@ -77,21 +76,21 @@ public class EqualizationTests
 
     public static IEnumerable<object[]> GetChanges()
     {
-        yield return new object[] { new Action<Repository>(rp => rp.Id = 0) };
-        yield return new object[] { new Action<Repository>(rp => rp.OrganizationId = 56) };
-        yield return new object[] { new Action<Repository>(rp => rp.Name = "Different name") };
-        yield return new object[] { new Action<Repository>(rp => rp.InternalName = "Test name") };
-        yield return new object[] { new Action<Repository>(rp => rp.InternalName = null) };
-        yield return new object[] { new Action<Repository>(rp => rp.InternalName = string.Empty) };
-        yield return new object[] { new Action<Repository>(rp => rp.InternalName = "   ") };
-        yield return new object[] { new Action<Repository>(rp => rp.Description = "Different description") };
-        yield return new object[] { new Action<Repository>(rp => rp.InitialCommits = new[] { "Different commits" }) };
-        yield return new object[] { new Action<Repository>(rp => rp.SubsequentCommits = new[] { "Some commits" }) };
-        yield return new object[] { new Action<Repository>(rp => rp.Likes = -1) };
-        yield return new object[] { new Action<Repository>(rp => rp.Likes = 0) };
-        yield return new object[] { new Action<Repository>(rp => rp.Likes = 1) };
-        yield return new object[] { new Action<Repository>(rp => rp.Likes = 2) };
-        yield return new object[] { new Action<Repository>(rp => rp.Likes = 1200) };
+        yield return new object[] { new Action<CodeRepository>(rp => rp.Id = 0) };
+        yield return new object[] { new Action<CodeRepository>(rp => rp.OrganizationId = 56) };
+        yield return new object[] { new Action<CodeRepository>(rp => rp.Name = "Different name") };
+        yield return new object[] { new Action<CodeRepository>(rp => rp.InternalName = "Test name") };
+        yield return new object[] { new Action<CodeRepository>(rp => rp.InternalName = null) };
+        yield return new object[] { new Action<CodeRepository>(rp => rp.InternalName = string.Empty) };
+        yield return new object[] { new Action<CodeRepository>(rp => rp.InternalName = "   ") };
+        yield return new object[] { new Action<CodeRepository>(rp => rp.Description = "Different description") };
+        yield return new object[] { new Action<CodeRepository>(rp => rp.InitialCommits = new[] { "Different commits" }) };
+        yield return new object[] { new Action<CodeRepository>(rp => rp.SubsequentCommits = new[] { "Some commits" }) };
+        yield return new object[] { new Action<CodeRepository>(rp => rp.Likes = -1) };
+        yield return new object[] { new Action<CodeRepository>(rp => rp.Likes = 0) };
+        yield return new object[] { new Action<CodeRepository>(rp => rp.Likes = 1) };
+        yield return new object[] { new Action<CodeRepository>(rp => rp.Likes = 2) };
+        yield return new object[] { new Action<CodeRepository>(rp => rp.Likes = 1200) };
     }
 
     private static Equalizer PrepareEqualizer()
@@ -103,9 +102,9 @@ public class EqualizationTests
         return equalizer;
     }
 
-    private static RepositoryPrototype PrepareRepositoryPrototype()
+    private static CodeRepositoryPrototype PrepareRepositoryPrototype()
     {
-        var repositoryPrototype = new RepositoryPrototype
+        var repositoryPrototype = new CodeRepositoryPrototype
         {
             Name = "Test name",
             Description = "Test description",
@@ -115,16 +114,16 @@ public class EqualizationTests
         return repositoryPrototype;
     }
 
-    private static void PrepareRepository(Repository repository)
+    private static void PrepareRepository(CodeRepository codeRepository)
     {
-        repository.Id = 1;
-        repository.InternalName = "internal_test_name";
-        repository.Name = "Test name";
-        repository.Description = "Test description";
-        repository.OrganizationId = 5;
-        repository.InitialCommits = PrepareInitialCommits();
-        repository.SubsequentCommits = Enumerable.Empty<string>();
-        repository.Likes = 6;
+        codeRepository.Id = 1;
+        codeRepository.InternalName = "internal_test_name";
+        codeRepository.Name = "Test name";
+        codeRepository.Description = "Test description";
+        codeRepository.OrganizationId = 5;
+        codeRepository.InitialCommits = PrepareInitialCommits();
+        codeRepository.SubsequentCommits = Enumerable.Empty<string>();
+        codeRepository.Likes = 6;
     }
 
     private static IEnumerable<string> PrepareInitialCommits() => new[] { "A", "B", "C", "merge A and B" };

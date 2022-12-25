@@ -6,13 +6,18 @@ using TryAtSoftware.Equalizer.Core.Extensions;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 using TryAtSoftware.Equalizer.Core.Templates;
 
-public class EmptyCollectionEqualizationProfile : BaseTypedEqualizationProfile<EmptyValueTemplate, IEnumerable<object>>
+/// <summary>
+/// An implementation of the <see cref="IEqualizationProfile"/> interface responsible for defining the "is empty" logical function for collections.
+/// </summary>
+public class EmptyCollectionEqualizationProfile : BaseTypedEqualizationProfile<EmptyValueTemplate, IEnumerable<object>?>
 {
-    public override IEqualizationResult Equalize(EmptyValueTemplate expected, IEnumerable<object> actual, IEqualizationOptions options)
+    /// <inheritdoc />
+    protected override IEqualizationResult Equalize(EmptyValueTemplate expected, IEnumerable<object>? actual, IEqualizationOptions options)
     {
         if (actual is null || !actual.Any()) return new SuccessfulEqualizationResult();
         return new UnsuccessfulEqualizationResult(this.UnsuccessfulEqualization(expected, actual));
     }
 
-    protected override bool AllowNullSubordinate => true;
+    /// <inheritdoc />
+    protected override bool AllowNullActual => true;
 }

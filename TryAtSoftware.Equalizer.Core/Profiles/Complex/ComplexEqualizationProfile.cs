@@ -6,11 +6,17 @@ using TryAtSoftware.Equalizer.Core.Extensions;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 using TryAtSoftware.Equalizer.Core.Profiles.Complex.Rules;
 
-public class ComplexEqualizationProfile<TPrincipal, TSubordinate> : BaseTypedEqualizationProfile<TPrincipal, TSubordinate>
+/// <summary>
+/// An implementation of the <see cref="IEqualizationProfile"/> interface responsible for equalizing complex types.
+/// </summary>
+/// <typeparam name="TExpected">The type of the expected value.</typeparam>
+/// <typeparam name="TActual">The type of the actual value.</typeparam>
+public class ComplexEqualizationProfile<TExpected, TActual> : BaseTypedEqualizationProfile<TExpected, TActual>
 {
-    private readonly List<IEqualizationRule<TPrincipal, TSubordinate>> _rules = new();
+    private readonly List<IComplexEqualizationRule<TExpected, TActual>> _rules = new();
 
-    public override IEqualizationResult Equalize(TPrincipal expected, TSubordinate actual, IEqualizationOptions options)
+    /// <inheritdoc />
+    protected override IEqualizationResult Equalize(TExpected expected, TActual actual, IEqualizationOptions options)
     {
         if (expected is null && actual is null) return new SuccessfulEqualizationResult();
         if (expected is null || actual is null) return new UnsuccessfulEqualizationResult(this.UnsuccessfulEqualization(expected, actual));
@@ -27,31 +33,61 @@ public class ComplexEqualizationProfile<TPrincipal, TSubordinate> : BaseTypedEqu
         return new SuccessfulEqualizationResult();
     }
 
-    protected void Equalize(Func<TPrincipal, object> expectedValueSelector, Func<TSubordinate, object> actualValueSelector)
+    /// <summary>
+    /// Use this method to add an <see cref="IComplexEqualizationRule{TExpected,TActual}"/> validating the equality between the selected expected and actual values.
+    /// </summary>
+    /// <param name="expectedValueSelector">A function selecting the expected value.</param>
+    /// <param name="actualValueSelector">A function selecting the actual value.</param>
+    protected void Equalize(Func<TExpected, object?> expectedValueSelector, Func<TActual, object?> actualValueSelector)
     {
-        var rule = new EqualizationRule<TPrincipal, TSubordinate>(expectedValueSelector, actualValueSelector);
+        var rule = new EqualizationRule<TExpected, TActual>(expectedValueSelector, actualValueSelector);
         this.AddRule(rule);
     }
 
-    protected void Equalize<TValue>(TValue value, Func<TSubordinate, object> actualValueSelector) => this.Equalize(_ => value, actualValueSelector);
+    /// <summary>
+    /// Use this method to add an <see cref="IComplexEqualizationRule{TExpected,TActual}"/> validating the equality between the expected value and the selected actual value.
+    /// </summary>
+    /// <param name="expectedValue">The expected value.</param>
+    /// <param name="actualValueSelector">A function selecting the actual value.</param>
+    protected void Equalize<TValue>(TValue? expectedValue, Func<TActual, object?> actualValueSelector) => this.Equalize(_ => expectedValue, actualValueSelector);
 
-    protected void Differentiate(Func<TPrincipal, object> expectedValueSelector, Func<TSubordinate, object> actualValueSelector)
+    /// <summary>
+    /// Use this method to add an <see cref="IComplexEqualizationRule{TExpected,TActual}"/> validating the inequality between the selected expected and actual values.
+    /// </summary>
+    /// <param name="expectedValueSelector">A function selecting the expected value.</param>
+    /// <param name="actualValueSelector">A function selecting the actual value.</param>
+    protected void Differentiate(Func<TExpected, object?> expectedValueSelector, Func<TActual, object?> actualValueSelector)
     {
-        var rule = new DifferentiationRule<TPrincipal, TSubordinate>(expectedValueSelector, actualValueSelector);
+        var rule = new DifferentiationRule<TExpected, TActual>(expectedValueSelector, actualValueSelector);
         this.AddRule(rule);
     }
 
-    protected void Differentiate<TValue>(TValue value, Func<TSubordinate, object> actualValueSelector) => this.Differentiate(_ => value, actualValueSelector);
+    /// <summary>
+    /// Use this method to add an <see cref="IComplexEqualizationRule{TExpected,TActual}"/> validating the inequality between the expected value and the selected actual value.
+    /// </summary>
+    /// <param name="expectedValue">The expected value.</param>
+    /// <param name="actualValueSelector">A function selecting the actual value.</param>
+    protected void Differentiate<TValue>(TValue? expectedValue, Func<TActual, object?> actualValueSelector) => this.Differentiate(_ => expectedValue, actualValueSelector);
 
-    protected void Extend(ComplexEqualizationProfile<TPrincipal, TSubordinate> commonProfile)
+    /// <summary>
+    /// Use this method to extend this complex equalization profile with some common configuration from the provided <paramref name="commonProfile"/>.
+    /// </summary>
+    /// <param name="commonProfile">Another <see cref="ComplexEqualizationProfile{TExpected,TActual}"/> instance this one should extend from.</param>
+    /// <exception cref="ArgumentNullException">Thrown of the provided <paramref name="commonProfile"/> is null.</exception>
+    protected void Extend(ComplexEqualizationProfile<TExpected, TActual> commonProfile)
     {
-        if (commonProfile is null) return;
+        if (commonProfile is null) throw new ArgumentNullException(nameof(commonProfile));
         foreach (var commonProfileRule in commonProfile._rules) this.AddRule(commonProfileRule);
     }
 
-    private void AddRule(IEqualizationRule<TPrincipal, TSubordinate> equalizationRule)
+    /// <summary>
+    /// Use this method to register an external <see cref="IComplexEqualizationRule{TExpected,TActual}"/>.
+    /// </summary>
+    /// <param name="complexEqualizationRule">The <see cref="IComplexEqualizationRule{TExpected,TActual}"/> instance to register.</param>
+    /// <exception cref="ArgumentNullException">Thrown if the provided <paramref name="complexEqualizationRule"/> is null.</exception>
+    protected void AddRule(IComplexEqualizationRule<TExpected, TActual> complexEqualizationRule)
     {
-        if (equalizationRule is null) return;
-        this._rules.Add(equalizationRule);
+        if (complexEqualizationRule is null) throw new ArgumentNullException(nameof(complexEqualizationRule));
+        this._rules.Add(complexEqualizationRule);
     }
 }

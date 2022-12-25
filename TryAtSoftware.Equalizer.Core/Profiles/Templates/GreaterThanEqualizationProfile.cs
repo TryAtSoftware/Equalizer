@@ -5,9 +5,13 @@ using TryAtSoftware.Equalizer.Core.Extensions;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 using TryAtSoftware.Equalizer.Core.Templates;
 
+/// <summary>
+/// An implementation of the <see cref="IEqualizationProfile"/> interface responsible for defining the "greater than a value" logical function.
+/// </summary>
 public class GreaterThanEqualizationProfile : BaseTypedEqualizationProfile<GreaterThanValueTemplate, IComparable>
 {
-    public override IEqualizationResult Equalize(GreaterThanValueTemplate expected, IComparable actual, IEqualizationOptions options)
+    /// <inheritdoc />
+    protected override IEqualizationResult Equalize(GreaterThanValueTemplate expected, IComparable actual, IEqualizationOptions options)
     {
         if (actual.CompareTo(expected.Value) <= 0)
             return new UnsuccessfulEqualizationResult(this.UnsuccessfulEqualization(expected, actual));

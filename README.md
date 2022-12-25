@@ -111,3 +111,12 @@ static void RegisterEqualizationProfilesFromDI(Equalizer equalizer, IServiceProv
 If you have some very special case so none of the existing profile providers can deal with it, of course, feel free to write your own custom implementation of the `IEqualizationProfileProvider` interface.
 
 ## Creating your first equalization profile
+
+## Value templates
+
+There are some cases for which standard value equality is not applicable and the plain old process of equality validation is no longer appropriate.
+`Value templates` allow us to be as flexible and minimalistic as possible because thus we can extend the existing platform with different behavior.
+For each defined `value template` there are standard internally included equalization profiles that realize additional logical functions - `greater than a value`, `greater than or equal to a value`, `lower than a value`, `lower than or equal to a value`, `is empty`, etc.
+
+- All `value templates` should be accessed throughout the `Value` static class.
+- All `value templates` *must* be included within the equality validation process as an expected value.
