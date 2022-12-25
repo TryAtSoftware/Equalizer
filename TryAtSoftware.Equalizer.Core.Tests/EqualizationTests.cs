@@ -97,7 +97,7 @@ public class EqualizationTests
     {
         var equalizer = new Equalizer();
         var profilesProvider = new DedicatedProfileProvider();
-        profilesProvider.AddProfile(new RepositoryEqualizationProfile());
+        profilesProvider.AddProfile(new CodeRepositoryEqualizationProfile());
         equalizer.AddProfileProvider(profilesProvider);
         return equalizer;
     }

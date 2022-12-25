@@ -10,7 +10,25 @@
 # About the project
 
 `TryAtSoftware.Equalizer` is a library that should simplify the process of validating the equality between two values no matter of the complexity.
-We offer a set of methods and components that can be used to accomplish this goal. They are reusable and can be applied to every projects of yours.
+
+Maybe you are used to writing code like this (where you have methods asserting the equality between every common properties of two objects):
+
+```
+public static void AssertAreEqual(Person a, Person b)
+{
+    Assert.NotNull(a);
+    Assert.NotNull(b);
+
+    Assert.AreEqual(a.Id, b.Id);
+    Assert.AreEqual(a.FirstName, b.FirstName);
+    Assert.AreEqual(a.LastName, b.LastName);
+    // ... Assert all other propertes ...
+}
+```
+
+There's nothing wrong with this code and it is totally fine to use such methods. But there are also some situations that are more complex and this solution is not applicable. For example, if you need to assert the equality betwen two different types, two different types that are part of separate polymorphic hierarchies, different data structures containing entities of different types.
+
+Here comes our library! We offer a set of methods and components that can be used to accomplish this goal. They are reusable and can be applied to every projects of yours.
 
 # About us
 
@@ -91,7 +109,99 @@ static void RegisterEqualizationProfilesFromDI(Equalizer equalizer, IServiceProv
 
 If you have some very special case so none of the existing profile providers can deal with it, of course, feel free to write your own custom implementation of the `IEqualizationProfileProvider` interface.
 
-## Creating your first equalization profile
+## Complex equalization profiles
+
+The equalization profiles described in this chapter should be used to setup a `complex equalization` process.
+There are some of examples of what might be referred by this term:
+
+- Equalizing values of different types
+- Equalizing values of the same type when this is not a trivial task
+
+All complex equalization profiles should inherit a common base class called `ComplexEqualizationProfile<TExpected, TActual>`.
+The inheritors should setup the equalization logic (throughout registering various `IComplexEqualizationRule<TExpected, TActual>` instances) in their constructor.
+There are predefined methods for equalization and differentiation that can be used directly.
+Here is one standard example:
+
+```C#
+public class CodeRepositoryEqualizationProfile : ComplexEqualizationProfile<CodeRepositoryPrototype, CodeRepository>
+{
+    public CodeRepositoryEqualizationProfile()
+    {
+        this.Extend(new CommonIdentifiableEqualizationProfile<CodeRepositoryPrototype, CodeRepository, int>());
+        this.Equalize(rp => rp.Name, r => r.Name);
+        this.Equalize(rp => rp.Description, r => r.Description);
+        this.Equalize(5, r => r.OrganizationId);
+        this.Differentiate(rp => rp.Name, r => r.InternalName);
+        this.Differentiate(Value.Empty, r => r.InternalName);
+        this.Equalize(rp => rp.CommitMessages, r => r.InitialCommits);
+        this.Equalize(Value.Empty, r => r.SubsequentCommits);
+        this.Equalize(Value.LowerThan(100), r => r.Likes);
+        this.Equalize(Value.GreaterThanOrEqual(3), r => r.Likes);
+    }
+}
+```
+
+### Extending
+
+As you can see in the example above, there is one method that has not been mentioned yet.
+The `Extend` method is used to enrich the current complex equalization profile with the equalization rules defined within the provided one.
+
+This is the recommended way of reusing complex equalization rules instead of building fancy hierarchies of types. 
+
+### Customizing
+
+Validating the equality or inequality between specific segments of two complex objects is enough to cover a big percentage of use cases (including the possibility of using various logical functions throughout [value templates](#value-templates)).
+Nevertheless, the complex equalization profiles allow registering custom `complex equalization rules` using the `AddRule(complexEqualizationRule)` method.
+
+## General equalization profiles
+
+General equalization profiles exist to make it easier than ever to equalize two instances of the same type.
+Without this feature, it would have been necessary to define a separate equalization profile for every type that should be generally equalized.
+Here is an example:
+
+```C#
+public class PersonEqualizationProfile : ComplexEqualizationProfile<Person, Person>
+{
+    public PersonEqualizationProfile()
+    {
+        this.Equalize(x => x.Id, x => x.Id);
+        this.Equalize(x => x.FirstName, x => x.FirstName);
+        this.Equalize(x => x.LastName, x => x.LastName);
+    }
+}
+```
+
+This code is simple, very straightforward and easy to understand. However, it seems redundant and hard to maintain (especially when the structure of the equalized type changes).
+
+Instead of creating multiple complex equalization profiles to equalize the values of all publicly exposed properties for a given type, you can use a `general equalization` profile.
+
+```C#
+var equalizer = new Equalizer();
+
+var dedicatedProfileProvider = new DedicatedProfileProvider();
+dedicatedProfileProvider.AddProfile(new GeneralEqualizationProfile<Person>());
+
+equalizer.AddProfileProvider(dedicatedProfileProvider);
+```
+
+### Modifying the default general equalization behavior
+
+This is an advanced topic that describes how the default `general equalization` behavior can be controlled.
+As written above the `general equalization` profiles will equalize all publicly exposed properties for a given type.
+However, in some cases one would like to equalize some inaccessible properties or even fields; in others one would like to prevent certain properties from being equalized.
+This can be achieved by passing a custom `IGeneralEqualizationContext<T>` instance to the `GeneralEqualizationProfile<T>` constructor.
+We have identified two approaches of doing this:
+
+- Reusing the default `GeneralEqualizationContext<T>` implementation by instantiating it with a specific `IMembersBinder` instance. _The default general equalization context works with properties only._
+- Defining a custom implementation of the `IGeneralEqualizationContext<T>` interface.
+
+No matter of the selected approach, there are a few more things to be considered:
+
+- Use reflection wisely
+- Cache the value accessors per type
+
+> The default general equalization context uses reflection optimally by constructing an expression for each property included within the general equalization process and then compiling it.
+> The singleton instance `GeneralEqualizationContext<T>.Instance` is initialized by following the described process and thus is realized a simple caching mechanism.
 
 ## Value templates
 
@@ -99,5 +209,5 @@ There are some cases for which standard value equality is not applicable and the
 `Value templates` allow us to be as flexible and minimalistic as possible because thus we can extend the existing platform with different behavior.
 For each defined `value template` there are standard internally included equalization profiles that realize additional logical functions - `greater than a value`, `greater than or equal to a value`, `lower than a value`, `lower than or equal to a value`, `is empty`, etc.
 
-- All `value templates` should be accessed throughout the `Value` static class.
-- All `value templates` *must* be included within the equality validation process as an expected value.
+- All `value templates` _should_ be constructed throughout the `Value` static class.
+- All `value templates` _must_ be included within the equality validation process as an expected value.

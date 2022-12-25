@@ -1,14 +1,12 @@
 ﻿namespace TryAtSoftware.Equalizer.Core.Tests.Profiles;
 
-using System.Linq;
 using TryAtSoftware.Equalizer.Core.Profiles.Complex;
 using TryAtSoftware.Equalizer.Core.Templates;
-using TryAtSoftware.Equalizer.Core.Tests.Models;
 using TryAtSoftware.Equalizer.Core.Tests.Models.VersionControl;
 
-public class RepositoryEqualizationProfile : ComplexEqualizationProfile<CodeRepositoryPrototype, CodeRepository>
+public class CodeRepositoryEqualizationProfile : ComplexEqualizationProfile<CodeRepositoryPrototype, CodeRepository>
 {
-    public RepositoryEqualizationProfile()
+    public CodeRepositoryEqualizationProfile()
     {
         this.Extend(new CommonIdentifiableEqualizationProfile<CodeRepositoryPrototype, CodeRepository, int>());
         this.Equalize(rp => rp.Name, r => r.Name);
@@ -17,7 +15,7 @@ public class RepositoryEqualizationProfile : ComplexEqualizationProfile<CodeRepo
         this.Differentiate(rp => rp.Name, r => r.InternalName);
         this.Differentiate(Value.Empty, r => r.InternalName);
         this.Equalize(rp => rp.CommitMessages, r => r.InitialCommits);
-        this.Equalize(Enumerable.Empty<string>(), r => r.SubsequentCommits);
+        this.Equalize(Value.Empty, r => r.SubsequentCommits);
         this.Equalize(Value.LowerThan(100), r => r.Likes);
         this.Equalize(Value.GreaterThanOrEqual(3), r => r.Likes);
     }
