@@ -150,7 +150,7 @@ This is the recommended way of reusing complex equalization rules instead of bui
 
 ### Customizing
 
-Validating the equality or inequality between sub-multitudes of two complex objects is enough to cover a big percentage of the desired equalization process (including the possibility of using various logical functions throughout [value templates](#value-templates)).
+Validating the equality or inequality between specific segments of two complex objects is enough to cover a big percentage of use cases (including the possibility of using various logical functions throughout [value templates](#value-templates)).
 Nevertheless, the complex equalization profiles allow registering custom `complex equalization rules` using the `AddRule(complexEqualizationRule)` method.
 
 ## General equalization profiles
@@ -167,7 +167,7 @@ public class PersonEqualizationProfile : ComplexEqualizationProfile<Person, Pers
         this.Equalize(x => x.Id, x => x.Id);
         this.Equalize(x => x.FirstName, x => x.FirstName);
         this.Equalize(x => x.LastName, x => x.LastName);
-    }~~~~
+    }
 }
 ```
 
