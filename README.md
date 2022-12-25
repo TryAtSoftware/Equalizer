@@ -111,6 +111,48 @@ If you have some very special case so none of the existing profile providers can
 
 ## Complex equalization profiles
 
+The equalization profiles described in this chapter should be used to setup a `complex equalization` process.
+There are some of examples of what might be referred by this term:
+
+- Equalizing values of different types
+- Equalizing values of the same type when this is not a trivial task
+
+All complex equalization profiles should inherit a common base class called `ComplexEqualizationProfile<TExpected, TActual>`.
+The inheritors should setup the equalization logic (throughout registering various `IComplexEqualizationRule<TExpected, TActual>` instances) in their constructor.
+There are predefined methods for equalization and differentiation that can be used directly.
+Here is one standard example:
+
+```C#
+public class CodeRepositoryEqualizationProfile : ComplexEqualizationProfile<CodeRepositoryPrototype, CodeRepository>
+{
+    public CodeRepositoryEqualizationProfile()
+    {
+        this.Extend(new CommonIdentifiableEqualizationProfile<CodeRepositoryPrototype, CodeRepository, int>());
+        this.Equalize(rp => rp.Name, r => r.Name);
+        this.Equalize(rp => rp.Description, r => r.Description);
+        this.Equalize(5, r => r.OrganizationId);
+        this.Differentiate(rp => rp.Name, r => r.InternalName);
+        this.Differentiate(Value.Empty, r => r.InternalName);
+        this.Equalize(rp => rp.CommitMessages, r => r.InitialCommits);
+        this.Equalize(Value.Empty, r => r.SubsequentCommits);
+        this.Equalize(Value.LowerThan(100), r => r.Likes);
+        this.Equalize(Value.GreaterThanOrEqual(3), r => r.Likes);
+    }
+}
+```
+
+### Extending
+
+As you can see in the example above, there is one method that has not been mentioned yet.
+The `Extend` method is used to enrich the current complex equalization profile with the equalization rules defined within the provided one.
+
+This is the recommended way of reusing complex equalization rules instead of building fancy hierarchies of types. 
+
+### Customizing
+
+Validating the equality or inequality between sub-multitudes of two complex objects is enough to cover a big percentage of the desired equalization process (including the possibility of using various logical functions throughout [value templates](#value-templates)).
+Nevertheless, the complex equalization profiles allow registering custom `complex equalization rules` using the `AddRule(complexEqualizationRule)` method.
+
 ## General equalization profiles
 
 General equalization profiles exist to make it easier than ever to equalize two instances of the same type.
@@ -125,9 +167,10 @@ public class PersonEqualizationProfile : ComplexEqualizationProfile<Person, Pers
         this.Equalize(x => x.Id, x => x.Id);
         this.Equalize(x => x.FirstName, x => x.FirstName);
         this.Equalize(x => x.LastName, x => x.LastName);
-    }
+    }~~~~
 }
 ```
+
 This code is simple, very straightforward and easy to understand. However, it seems redundant and hard to maintain (especially when the structure of the equalized type changes).
 
 Instead of creating multiple complex equalization profiles to equalize the values of all publicly exposed properties for a given type, you can use a `general equaliation` profile.
@@ -153,11 +196,12 @@ We have identified two approaches of doing this:
 - Defining a custom implementation of the `IgeneralEqualizationContext<T>` interface.
 
 No matter of the selected approach, there are a few more things to be considered:
+
 - Use reflection wisely
 - Cache the value accessors per type
 
 > The default general equalization context uses reflection optimally by constructing an expression for each property included within the general equalization process and then compiling it.
-> The singleton instance `GeneralEqualizationContext<T>.Instance` is initialized by following the described process and thus is realized a simple caching mechanism.  
+> The singleton instance `GeneralEqualizationContext<T>.Instance` is initialized by following the described process and thus is realized a simple caching mechanism.
 
 ## Value templates
 
