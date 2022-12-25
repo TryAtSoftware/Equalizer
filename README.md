@@ -13,7 +13,7 @@
 
 Maybe you are used to writing code like this (where you have methods asserting the equality between every common properties of two objects):
 
-```
+```C#
 public static void AssertAreEqual(Person a, Person b)
 {
     Assert.NotNull(a);
