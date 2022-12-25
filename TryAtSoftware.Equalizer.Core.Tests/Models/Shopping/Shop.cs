@@ -1,8 +1,7 @@
 ﻿namespace TryAtSoftware.Equalizer.Core.Tests.Models.Shopping;
 
-public class Shop : IIdentifiable<int>
+public class Shop : BaseIdentifiable
 {
-    public int Id { get; set; }
     public string Name { get; set; }
     public string Address { get; set; }
     public int Area { get; set; }

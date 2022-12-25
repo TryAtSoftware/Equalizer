@@ -2,10 +2,8 @@
 
 using System.Collections.Generic;
 
-public class CodeRepository : IIdentifiable<int>
+public class CodeRepository : BaseIdentifiable
 {
-    public int Id { get; set; }
-
     public int OrganizationId { get; set; }
     public string Name { get; set; }
     public string InternalName { get; set; }

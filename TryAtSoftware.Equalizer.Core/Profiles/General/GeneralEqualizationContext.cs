@@ -13,7 +13,11 @@ using TryAtSoftware.Extensions.Reflection.Interfaces;
 /// <typeparam name="T">The concrete entity type for the general equalization process.</typeparam>
 public class GeneralEqualizationContext<T> : IGeneralEqualizationContext<T>
 {
-    internal static GeneralEqualizationContext<T> Instance { get; } = Initialize();
+    /// <summary>
+    /// Gets a singleton instance of the default <see cref="GeneralEqualizationContext{T}"/> for <typeparamref name="T"/>.
+    /// It will include public instance properties only and each value accessor will be mapped against the corresponding name of the property.
+    /// </summary>
+    public static GeneralEqualizationContext<T> Instance { get; } = Initialize();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GeneralEqualizationContext{T}"/> class.
