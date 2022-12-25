@@ -173,7 +173,7 @@ public class PersonEqualizationProfile : ComplexEqualizationProfile<Person, Pers
 
 This code is simple, very straightforward and easy to understand. However, it seems redundant and hard to maintain (especially when the structure of the equalized type changes).
 
-Instead of creating multiple complex equalization profiles to equalize the values of all publicly exposed properties for a given type, you can use a `general equaliation` profile.
+Instead of creating multiple complex equalization profiles to equalize the values of all publicly exposed properties for a given type, you can use a `general equalization` profile.
 
 ```C#
 var equalizer = new Equalizer();
@@ -188,12 +188,12 @@ equalizer.AddProfileProvider(dedicatedProfileProvider);
 
 This is an advanced topic that describes how the default `general equalization` behavior can be controlled.
 As written above the `general equalization` profiles will equalize all publicly exposed properties for a given type.
-However, in some cases one would like to equalize some inaccessible properties or even fields; in others one would like to prevent a certain properties from being equalized.
+However, in some cases one would like to equalize some inaccessible properties or even fields; in others one would like to prevent certain properties from being equalized.
 This can be achieved by passing a custom `IGeneralEqualizationContext<T>` instance to the `GeneralEqualizationProfile<T>` constructor.
 We have identified two approaches of doing this:
 
 - Reusing the default `GeneralEqualizationContext<T>` implementation by instantiating it with a specific `IMembersBinder` instance. _The default general equalization context works with properties only._
-- Defining a custom implementation of the `IgeneralEqualizationContext<T>` interface.
+- Defining a custom implementation of the `IGeneralEqualizationContext<T>` interface.
 
 No matter of the selected approach, there are a few more things to be considered:
 
@@ -209,5 +209,5 @@ There are some cases for which standard value equality is not applicable and the
 `Value templates` allow us to be as flexible and minimalistic as possible because thus we can extend the existing platform with different behavior.
 For each defined `value template` there are standard internally included equalization profiles that realize additional logical functions - `greater than a value`, `greater than or equal to a value`, `lower than a value`, `lower than or equal to a value`, `is empty`, etc.
 
-- All `value templates` _should_ be accessed throughout the `Value` static class.
+- All `value templates` _should_ be constructed throughout the `Value` static class.
 - All `value templates` _must_ be included within the equality validation process as an expected value.
