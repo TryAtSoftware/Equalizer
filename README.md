@@ -30,7 +30,6 @@ There's nothing wrong with this code and it is totally fine to use such methods.
 
 Here comes our library! We offer a set of methods and components that can be used to accomplish this goal. They are reusable and can be applied to every projects of yours.
 
-
 # About us
 
 `Try At Software` is a software development company based in Bulgaria. We are mainly using `dotnet` technologies (`C#`, `ASP.NET Core`, `Entity Framework Core`, etc.) and our main idea is to provide a set of tools that can simplify the majority of work a developer does on a daily basis.
@@ -110,7 +109,9 @@ static void RegisterEqualizationProfilesFromDI(Equalizer equalizer, IServiceProv
 
 If you have some very special case so none of the existing profile providers can deal with it, of course, feel free to write your own custom implementation of the `IEqualizationProfileProvider` interface.
 
-## Creating your first equalization profile
+## Complex equalization profiles
+
+## General equalization profiles
 
 ## Value templates
 
@@ -118,5 +119,5 @@ There are some cases for which standard value equality is not applicable and the
 `Value templates` allow us to be as flexible and minimalistic as possible because thus we can extend the existing platform with different behavior.
 For each defined `value template` there are standard internally included equalization profiles that realize additional logical functions - `greater than a value`, `greater than or equal to a value`, `lower than a value`, `lower than or equal to a value`, `is empty`, etc.
 
-- All `value templates` should be accessed throughout the `Value` static class.
-- All `value templates` *must* be included within the equality validation process as an expected value.
+- All `value templates` _should_ be accessed throughout the `Value` static class.
+- All `value templates` _must_ be included within the equality validation process as an expected value.
