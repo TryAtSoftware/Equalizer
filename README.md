@@ -26,7 +26,7 @@ public static void AssertAreEqual(Person a, Person b)
 }
 ```
 
-There's nothing wrong with this code and it is totally fine to use such methods. But there are also some situations that are more complex and this solution is not applicable. For example, if you need to assert the equality betwen two different types, two different types that are part of separate polymorphic hierarchies, different data structures containing entities of different types.
+There's nothing wrong with this code and it is totally fine to use such methods. But there are also some situations that are more complex and this solution is not applicable. For example, if you need to assert the equality between two different types, two different types that are part of separate polymorphic hierarchies, different data structures containing entities of different types.
 
 Here comes our library! We offer a set of methods and components that can be used to accomplish this goal. They are reusable and can be applied to every projects of yours.
 
@@ -146,7 +146,7 @@ public class CodeRepositoryEqualizationProfile : ComplexEqualizationProfile<Code
 As you can see in the example above, there is one method that has not been mentioned yet.
 The `Extend` method is used to enrich the current complex equalization profile with the equalization rules defined within the provided one.
 
-This is the recommended way of reusing complex equalization rules instead of building fancy hierarchies of types. 
+This is the recommended way of reusing complex equalization rules instead of building fancy hierarchies of types.
 
 ### Customizing
 

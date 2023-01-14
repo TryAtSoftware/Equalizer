@@ -3,6 +3,7 @@
 using System;
 using System.Text;
 using TryAtSoftware.Equalizer.Core.Interfaces;
+using TryAtSoftware.Extensions.Reflection;
 
 internal static class ErrorMessages
 {
@@ -10,14 +11,14 @@ internal static class ErrorMessages
     {
         if (source is null) throw new ArgumentNullException(nameof(source));
 
-        return UnsuccessfulEqualization(source.GetType().Name, expected, actual, description);
+        return UnsuccessfulEqualization(TypeNames.Get(source.GetType()), expected, actual, description);
     }
 
     public static string UnsuccessfulDifferentiation<T>(this T source, object? expected, object? actual, string? description = null)
     {
         if (source is null) throw new ArgumentNullException(nameof(source));
 
-        return UnsuccessfulDifferentiation(source.GetType().Name, expected, actual, description);
+        return UnsuccessfulDifferentiation(TypeNames.Get(source.GetType()), expected, actual, description);
     }
 
     internal static string With(this string? errorMessage, IEqualizationResult? equalizationResult)
