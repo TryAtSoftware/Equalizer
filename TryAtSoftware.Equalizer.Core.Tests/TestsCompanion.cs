@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using Moq;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 using TryAtSoftware.Randomizer.Core.Helpers;
+using Xunit;
 
 public static class TestsCompanion
 {
     public static (IEnumerable<IEqualizationProfile> All, IEqualizationProfile Executable) PrepareEqualizationProfileMultitude()
     {
         var allEqualizationProfiles = new List<IEqualizationProfile>();
-        IEqualizationProfile executableProfile = null;
+        IEqualizationProfile? executableProfile = null;
         
         var profilesCount = RandomizationHelper.RandomInteger(2, 10);
         var executableProfileIndex = RandomizationHelper.RandomInteger(0, profilesCount);
@@ -23,6 +24,7 @@ public static class TestsCompanion
             if (isExecutable) executableProfile = profileInstance;
         }
 
+        Assert.NotNull(executableProfile);
         return (allEqualizationProfiles, executableProfile);
     }
 

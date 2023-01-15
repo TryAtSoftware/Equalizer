@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 
+#nullable disable
 public class CodeRepository : BaseIdentifiable
 {
     public int OrganizationId { get; set; }
@@ -12,3 +13,4 @@ public class CodeRepository : BaseIdentifiable
     public IEnumerable<string> SubsequentCommits { get; set; }
     public int Likes { get; set; }
 }
+#nullable restore

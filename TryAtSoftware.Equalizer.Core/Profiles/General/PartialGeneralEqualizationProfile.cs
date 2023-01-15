@@ -1,8 +1,9 @@
 ﻿namespace TryAtSoftware.Equalizer.Core.Profiles.General;
 
 using TryAtSoftware.Equalizer.Core.Interfaces;
+using TryAtSoftware.Equalizer.Core.PartialValues;
 
-public class PartialGeneralEqualizationProfile<T> : BaseTypedEqualizationProfile<PartialValue<T>, T>
+public class PartialGeneralEqualizationProfile<T> : BaseTypedEqualizationProfile<IPartialValue<T>, T>
 {
     private readonly IGeneralEqualizationContext<T> _generalEqualizationContext;
 
@@ -16,5 +17,5 @@ public class PartialGeneralEqualizationProfile<T> : BaseTypedEqualizationProfile
     }
 
     /// <inheritdoc />
-    protected override IEqualizationResult Equalize(PartialValue<T> expected, T actual, IEqualizationOptions options) => this.Equalize(expected, actual, options, this._generalEqualizationContext);
+    protected override IEqualizationResult Equalize(IPartialValue<T> expected, T actual, IEqualizationOptions options) => this.Equalize(expected, actual, options, this._generalEqualizationContext);
 }

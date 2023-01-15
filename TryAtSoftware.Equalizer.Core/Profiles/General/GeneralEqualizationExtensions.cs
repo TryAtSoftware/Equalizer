@@ -3,17 +3,14 @@
 using System.Linq;
 using TryAtSoftware.Equalizer.Core.Extensions;
 using TryAtSoftware.Equalizer.Core.Interfaces;
+using TryAtSoftware.Equalizer.Core.PartialValues;
 using TryAtSoftware.Extensions.Collections;
 
 internal static class GeneralEqualizationExtensions
 {
-    internal static IEqualizationResult Equalize<TProfile, TEntity>(this TProfile equalizationProfile, TEntity expected, TEntity actual, IEqualizationOptions options, IGeneralEqualizationContext<TEntity> generalEqualizationContext)
-    {
-        var partialExpected = new PartialValue<TEntity>(expected); // This line of code allows us to reuse the subsequent method by constructing a `PartialValue` including all members of the expected one.
-        return equalizationProfile.Equalize(partialExpected, actual, options, generalEqualizationContext);
-    }
+    internal static IEqualizationResult Equalize<TProfile, TEntity>(this TProfile equalizationProfile, TEntity expected, TEntity actual, IEqualizationOptions options, IGeneralEqualizationContext<TEntity> generalEqualizationContext) => equalizationProfile.Equalize(expected.AsPartialValue(), actual, options, generalEqualizationContext);
 
-    internal static IEqualizationResult Equalize<TProfile, TEntity>(this TProfile equalizationProfile, PartialValue<TEntity> expected, TEntity actual, IEqualizationOptions options, IGeneralEqualizationContext<TEntity> generalEqualizationContext)
+    internal static IEqualizationResult Equalize<TProfile, TEntity>(this TProfile equalizationProfile, IPartialValue<TEntity> expected, TEntity actual, IEqualizationOptions options, IGeneralEqualizationContext<TEntity> generalEqualizationContext)
     {
         foreach (var (memberName, valueSelector) in generalEqualizationContext.ValueAccessors.OrEmptyIfNull().Where(x => expected.IncludesMember(x.Key)))
         {
