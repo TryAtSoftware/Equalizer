@@ -3,6 +3,10 @@
 using TryAtSoftware.Equalizer.Core.Interfaces;
 using TryAtSoftware.Equalizer.Core.PartialValues;
 
+/// <summary>
+/// An implementation of the <see cref="IEqualizationProfile"/> interface responsible for the partial general equalization between two values of the same type.
+/// </summary>
+/// <typeparam name="T">The concrete entity type for the general equalization process.</typeparam>
 public sealed class PartialGeneralEqualizationProfile<T> : BaseTypedEqualizationProfile<IPartialValue<T>, T>
     where T : notnull
 {
