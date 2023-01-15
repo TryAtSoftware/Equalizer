@@ -6,7 +6,8 @@ using TryAtSoftware.Equalizer.Core.Interfaces;
 /// An implementation of the <see cref="IEqualizationProfile"/> interface responsible for the general equalization between two values of the same type.
 /// </summary>
 /// <typeparam name="T">The concrete entity type for the general equalization process.</typeparam>
-public class GeneralEqualizationProfile<T> : BaseTypedEqualizationProfile<T, T>
+public sealed class GeneralEqualizationProfile<T> : BaseTypedEqualizationProfile<T, T>
+    where T : notnull
 {
     private readonly IGeneralEqualizationContext<T> _generalEqualizationContext;
 
