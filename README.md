@@ -203,6 +203,28 @@ No matter of the selected approach, there are a few more things to be considered
 > The default general equalization context uses reflection optimally by constructing an expression for each property included within the general equalization process and then compiling it.
 > The singleton instance `GeneralEqualizationContext<T>.Instance` is initialized by following the described process and thus is realized a simple caching mechanism.
 
+### Partial general equalization
+
+There are some cases in which the general equalization process should be executed over a limited subset of all exposed members from a given type.
+This is what the feature of `partial general equalization` covers.
+It is built atop the existing infrastructure you are already familiar with.
+In order to use it there are two things that should be done:
+- A `PartialGeneralEqualizationProfile<T>` for the corresponding type should be registered within the `Equalizer` that is being used
+- When asserting the semantic equality for a subset of the members between two values of the same time, the `expected` value should be an `IPartialValue<T>` instance. This can be achieved by using some of the predefined types or extension methods:
+
+```C#
+PersonRandomizer personRandomizer = new PersonRandomizer();
+Person person = personRandomizer.PrepareRandomValue();
+
+// When using the following value the equality all members but the specified (excluded) ones will be validated.
+// This call will instantiate an `ExclusivePartialValue<Person>` instance.
+IPartialValue<Person> partialPerson1 = person.Exclude(nameof(Person.FirstName));
+
+// When using the following value only the equality of the specified (included) members will be validated. The other members will be skiped.
+// This call will instantiate an `InclusivePartialValue<Person>` instance.
+IPartialValue<Person> partialPerson2 = person.Include(nameof(Person.LastName));
+```
+
 ## Value templates
 
 There are some cases for which standard value equality is not applicable and the plain old process of equality validation is no longer appropriate.

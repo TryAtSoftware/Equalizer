@@ -23,7 +23,7 @@ public static class GeneralEqualizationProfileTests
     [Fact]
     public static void GeneralInequalityShouldBeSuccessfullyValidatedWithExplicitContext() => GeneralInequalityShouldBeSuccessfullyValidated(ConstructCustomEqualizationContext());
 
-    private static void GeneralEqualityShouldBeSuccessfullyValidated(IGeneralEqualizationContext<Shop> context = null)
+    private static void GeneralEqualityShouldBeSuccessfullyValidated(IGeneralEqualizationContext<Shop>? context = null)
     {
         var shopRandomizer = new ShopRandomizer();
         var shop1 = shopRandomizer.PrepareRandomValue();
@@ -33,7 +33,7 @@ public static class GeneralEqualizationProfileTests
         equalizer.AssertEquality(shop1, shop2);
     }
 
-    private static void GeneralInequalityShouldBeSuccessfullyValidated(IGeneralEqualizationContext<Shop> context = null)
+    private static void GeneralInequalityShouldBeSuccessfullyValidated(IGeneralEqualizationContext<Shop>? context = null)
     {
         var shopRandomizer = new ShopRandomizer();
         var shop1 = shopRandomizer.PrepareRandomValue();
@@ -43,7 +43,7 @@ public static class GeneralEqualizationProfileTests
         Assert.Throws<InvalidAssertException>(() => equalizer.AssertEquality(shop1, shop2));
     }
 
-    private static Equalizer PrepareEqualizer(IGeneralEqualizationContext<Shop> context)
+    private static Equalizer PrepareEqualizer(IGeneralEqualizationContext<Shop>? context)
     {
         var equalizer = new Equalizer();
         var shopGeneralEqualizationProfile = new GeneralEqualizationProfile<Shop>(context);
