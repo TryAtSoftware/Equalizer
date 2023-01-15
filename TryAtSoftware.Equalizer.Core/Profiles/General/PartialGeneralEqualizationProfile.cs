@@ -4,6 +4,7 @@ using TryAtSoftware.Equalizer.Core.Interfaces;
 using TryAtSoftware.Equalizer.Core.PartialValues;
 
 public class PartialGeneralEqualizationProfile<T> : BaseTypedEqualizationProfile<IPartialValue<T>, T>
+    where T : notnull
 {
     private readonly IGeneralEqualizationContext<T> _generalEqualizationContext;
 

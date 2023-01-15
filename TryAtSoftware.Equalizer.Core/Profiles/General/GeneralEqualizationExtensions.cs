@@ -8,9 +8,12 @@ using TryAtSoftware.Extensions.Collections;
 
 internal static class GeneralEqualizationExtensions
 {
-    internal static IEqualizationResult Equalize<TProfile, TEntity>(this TProfile equalizationProfile, TEntity expected, TEntity actual, IEqualizationOptions options, IGeneralEqualizationContext<TEntity> generalEqualizationContext) => equalizationProfile.Equalize(expected.AsPartialValue(), actual, options, generalEqualizationContext);
+    internal static IEqualizationResult Equalize<TProfile, TEntity>(this TProfile equalizationProfile, TEntity expected, TEntity actual, IEqualizationOptions options, IGeneralEqualizationContext<TEntity> generalEqualizationContext)
+        where TEntity : notnull
+        => equalizationProfile.Equalize(expected.AsPartialValue(), actual, options, generalEqualizationContext);
 
     internal static IEqualizationResult Equalize<TProfile, TEntity>(this TProfile equalizationProfile, IPartialValue<TEntity> expected, TEntity actual, IEqualizationOptions options, IGeneralEqualizationContext<TEntity> generalEqualizationContext)
+        where TEntity : notnull
     {
         foreach (var (memberName, valueSelector) in generalEqualizationContext.ValueAccessors.OrEmptyIfNull().Where(x => expected.IncludesMember(x.Key)))
         {
