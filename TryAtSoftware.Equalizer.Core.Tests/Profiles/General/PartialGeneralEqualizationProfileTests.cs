@@ -5,6 +5,7 @@ using TryAtSoftware.Equalizer.Core.Assertions;
 using TryAtSoftware.Equalizer.Core.PartialValues;
 using TryAtSoftware.Equalizer.Core.ProfileProviders;
 using TryAtSoftware.Equalizer.Core.Profiles.General;
+using TryAtSoftware.Equalizer.Core.Tests.Models;
 using TryAtSoftware.Equalizer.Core.Tests.Models.Shopping;
 using TryAtSoftware.Equalizer.Core.Tests.Randomization.Shopping;
 using TryAtSoftware.Randomizer.Core.Helpers;
@@ -12,6 +13,16 @@ using Xunit;
 
 public class PartialGeneralEqualizationProfileTests
 {
+    [Fact]
+    public void PartialGeneralEqualityShouldBeValidatedSuccessfullyNoMatterOfTheGenericTypeUsed()
+    {
+        var shopRandomizer = new ShopRandomizer();
+        var shop = shopRandomizer.PrepareRandomValue();
+        
+        var equalizer = PrepareEqualizer();
+        equalizer.AssertEquality(shop.AsPartialValue<IIdentifiable<int>>(), shop);
+    }
+    
     [Fact]
     public void PartialGeneralEqualityShouldBeValidatedSuccessfullyWithExcludedMembers()
     {

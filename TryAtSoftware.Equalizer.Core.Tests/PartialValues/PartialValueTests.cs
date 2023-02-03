@@ -111,4 +111,12 @@ public class PartialValueTests
         Assert.IsType<InclusivePartialValue<Shop>>(partialShop);
         Assert.Same(shop, partialShop.Value);
     }
+
+    [Fact]
+    public void DynamicPartialValueShouldNotBeInstantiatedIfTheProvidedArgumentsAreInvalid()
+    {
+        Assert.Throws<ArgumentNullException>(() => new DynamicPartialValue<object>(null!, null!));
+        Assert.Throws<ArgumentNullException>(() => new DynamicPartialValue<object>(new object(), null!));
+        Assert.Throws<ArgumentNullException>(() => new DynamicPartialValue<object>(null!, _ => true));
+    }
 }
