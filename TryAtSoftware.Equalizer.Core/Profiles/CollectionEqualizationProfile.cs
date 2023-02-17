@@ -37,7 +37,7 @@ public class CollectionEqualizationProfile : BaseTypedEqualizationProfile<IEnume
             if (!equalizationResult.IsSuccessful)
             {
                 var errorMessage = this.UnsuccessfulEqualization(expected, actual, $"Element at index {index} do not match");
-                return new UnsuccessfulEqualizationResult(errorMessage.With(equalizationResult));
+                return new UnsuccessfulEqualizationResult(errorMessage.WithInner(equalizationResult));
             }
 
             index++;

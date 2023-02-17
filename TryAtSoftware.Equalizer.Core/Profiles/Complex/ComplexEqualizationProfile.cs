@@ -27,7 +27,7 @@ public class ComplexEqualizationProfile<TExpected, TActual> : BaseTypedEqualizat
             if (equalizationResult.IsSuccessful) continue;
 
             var errorMessage = this.UnsuccessfulEqualization(expected, actual);
-            return new UnsuccessfulEqualizationResult(errorMessage.With(equalizationResult));
+            return new UnsuccessfulEqualizationResult(errorMessage.WithInner(equalizationResult));
         }
 
         return new SuccessfulEqualizationResult();
