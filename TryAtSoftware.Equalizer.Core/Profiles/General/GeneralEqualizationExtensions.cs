@@ -24,7 +24,7 @@ internal static class GeneralEqualizationExtensions
             if (result.IsSuccessful) continue;
 
             var errorMessage = equalizationProfile.UnsuccessfulEqualization(expectedValue, actualValue, $"Values for the {memberName} member differ.");
-            return new UnsuccessfulEqualizationResult(errorMessage.With(result));
+            return new UnsuccessfulEqualizationResult(errorMessage.WithInner(result));
         }
 
         return new SuccessfulEqualizationResult();

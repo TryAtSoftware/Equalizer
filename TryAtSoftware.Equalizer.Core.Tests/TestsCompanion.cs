@@ -1,5 +1,6 @@
 ﻿namespace TryAtSoftware.Equalizer.Core.Tests;
 
+using System;
 using System.Collections.Generic;
 using Moq;
 using TryAtSoftware.Equalizer.Core.Interfaces;
@@ -40,5 +41,16 @@ public static class TestsCompanion
         profileMock.Setup(x => x.CanExecuteFor(It.IsAny<object>(), It.IsAny<object>())).Returns(isExecutable);
 
         return profileMock.Object;
+    }
+    
+    public static Mock<IEqualizationOptions> MockEqualizationOptions() => MockEqualizationOptions((_, _) => new SuccessfulEqualizationResult());
+
+    public static Mock<IEqualizationOptions> MockEqualizationOptions(Func<object, object, IEqualizationResult> internalEqualization)
+    {
+        var equalizationOptionsMock = new Mock<IEqualizationOptions>();
+        equalizationOptionsMock.Setup(eo => eo.Equalize(It.IsAny<object>(), It.IsAny<object>())).Returns(internalEqualization);
+        equalizationOptionsMock.Setup(eo => eo.ExpectedType).Returns(typeof(object));
+        equalizationOptionsMock.Setup(eo => eo.ActualType).Returns(typeof(object));
+        return equalizationOptionsMock;
     }
 }
