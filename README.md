@@ -5,7 +5,7 @@
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=TryAtSoftware_Equalizer&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=TryAtSoftware_Equalizer)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=TryAtSoftware_Equalizer&metric=bugs)](https://sonarcloud.io/summary/new_code?id=TryAtSoftware_Equalizer)
 
-[![Core validation](https://github.com/TryAtSoftware/Equalizer/actions/workflows/Core%20validation.yml/badge.svg)](https://github.com/TryAtSoftware/Equalizer/actions/workflows/Core%20validation.yml)
+[![Core validation](https://github.com/TryAtSoftware/Equalizer/actions/workflows/CI.yml/badge.svg)](https://github.com/TryAtSoftware/Equalizer/actions/workflows/CI.yml)
 
 # About the project
 
