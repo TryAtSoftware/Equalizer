@@ -24,4 +24,12 @@ public interface IEqualizationOptions
     /// <param name="actual">The actual object instance.</param>
     /// <returns>Returns a subsequently built <see cref="IEqualizationResult"/> instance containing information about the additionally executed equalization.</returns>
     IEqualizationResult Equalize(object? expected, object? actual);
+
+    /// <summary>
+    /// Use this method to validate the inequality of two other values as part of the current equalization process.
+    /// </summary>
+    /// <param name="expected">The expected object instance.</param>
+    /// <param name="actual">The actual object instance.</param>
+    /// <returns>Returns a subsequently built <see cref="IEqualizationResult"/> instance containing information about the additionally executed equalization.</returns>
+    IEqualizationResult Differentiate(object? expected, object? actual);
 }

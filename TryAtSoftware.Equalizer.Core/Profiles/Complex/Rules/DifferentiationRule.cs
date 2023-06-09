@@ -1,7 +1,6 @@
 ﻿namespace TryAtSoftware.Equalizer.Core.Profiles.Complex.Rules;
 
 using System;
-using TryAtSoftware.Equalizer.Core.Extensions;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 
 /// <summary>
@@ -31,8 +30,6 @@ public class DifferentiationRule<TExpected, TActual> : IComplexEqualizationRule<
         var expectedValue = this._expectedValueSelector(expected);
         var actualValue = this._actualValueSelector(actual);
 
-        var equalizationResult = options.Equalize(expectedValue, actualValue);
-        if (!equalizationResult.IsSuccessful) return new SuccessfulEqualizationResult();
-        return new UnsuccessfulEqualizationResult(this.UnsuccessfulDifferentiation(expectedValue, actualValue));
+        return options.Differentiate(expectedValue, actualValue);
     }
 }

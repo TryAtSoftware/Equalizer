@@ -11,4 +11,11 @@ public interface IEqualizer
     /// <param name="expected">The expected object instance.</param>
     /// <param name="actual">The actual object instance.</param>
     void AssertEquality(object? expected, object? actual);
+
+    /// <summary>
+    /// Use this method to assert the inequality between the two values.
+    /// </summary>
+    /// <param name="expected">The expected object instance.</param>
+    /// <param name="actual">The actual object instance.</param>
+    void AssertInequality(object? expected, object? actual);
 }
