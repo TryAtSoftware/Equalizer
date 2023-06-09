@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TryAtSoftware.Equalizer.Core.Tests", "TryAtSoftware.Equalizer.Core.Tests\TryAtSoftware.Equalizer.Core.Tests.csproj", "{2F58AFB5-734F-49B2-BE73-36BA96D51DBF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TryAtSoftware.Equalizer.Benchmark", "TryAtSoftware.Equalizer.Benchmark\TryAtSoftware.Equalizer.Benchmark.csproj", "{CD56A127-701E-40C2-96FF-5E876A590874}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{4EA45A5D-8799-44A6-8656-BA851512C458} = {8F3482A1-8E27-40EA-9AAC-A00CADFC8400}
 		{2F58AFB5-734F-49B2-BE73-36BA96D51DBF} = {2B5CD72B-77EC-4FD7-A0BE-7D9C4CFF797C}
+		{CD56A127-701E-40C2-96FF-5E876A590874} = {2B5CD72B-77EC-4FD7-A0BE-7D9C4CFF797C}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{4EA45A5D-8799-44A6-8656-BA851512C458}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -33,5 +36,9 @@ Global
 		{2F58AFB5-734F-49B2-BE73-36BA96D51DBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F58AFB5-734F-49B2-BE73-36BA96D51DBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F58AFB5-734F-49B2-BE73-36BA96D51DBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD56A127-701E-40C2-96FF-5E876A590874}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD56A127-701E-40C2-96FF-5E876A590874}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD56A127-701E-40C2-96FF-5E876A590874}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD56A127-701E-40C2-96FF-5E876A590874}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
