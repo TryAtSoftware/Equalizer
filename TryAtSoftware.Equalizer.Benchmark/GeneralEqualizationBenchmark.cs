@@ -8,10 +8,10 @@ using TryAtSoftware.Equalizer.Core.ProfileProviders;
 using TryAtSoftware.Equalizer.Core.Profiles.General;
 
 /*
-|                       Method |     Mean |    Error |   StdDev |
-|----------------------------- |---------:|---------:|---------:|
-|         AssertUsingEqualizer | 278.2 ms |  8.43 ms | 24.33 ms |
-| AssertUsingCompareNetObjects | 532.1 ms | 12.24 ms | 35.32 ms |
+|                       Method |     Mean |   Error |  StdDev |
+|----------------------------- |---------:|--------:|--------:|
+|         AssertUsingEqualizer | 164.0 ms | 3.13 ms | 2.93 ms |
+| AssertUsingCompareNetObjects | 299.7 ms | 3.62 ms | 3.21 ms |
  */
 public class GeneralEqualizationBenchmark
 {
