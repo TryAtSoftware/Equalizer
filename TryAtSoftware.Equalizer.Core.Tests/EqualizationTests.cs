@@ -61,6 +61,15 @@ public class EqualizationTests
         var equalizer = PrepareEqualizer();
         Assert.Throws<InvalidAssertException>(() => equalizer.AssertEquality(repositoryPrototype, repository));
     }
+
+    [Theory]
+    [InlineData(null, null)]
+    [InlineData(10, 10)]
+    public void EqualityShouldBeAssertedSuccessfullyForKnownValues(object? expected, object? actual)
+    {
+        var equalizer = new Equalizer();
+        equalizer.AssertEquality(expected, actual);
+    }
     
     [Fact]
     public void InequalityShouldBeAssertedSuccessfullyForLogicallyEqualEntities()
@@ -86,6 +95,16 @@ public class EqualizationTests
 
         var equalizer = PrepareEqualizer();
         equalizer.AssertInequality(repositoryPrototype, repository);
+    }
+
+    [Theory]
+    [InlineData(null, "val")]
+    [InlineData("val", null)]
+    [InlineData(10, 10.0)]
+    public void InequalityShouldBeAssertedSuccessfullyForKnownValues(object? expected, object? actual)
+    {
+        var equalizer = new Equalizer();
+        equalizer.AssertInequality(expected, actual);
     }
 
     [Fact]
