@@ -37,7 +37,7 @@ public class EqualizationTests
     }
 
     [Fact]
-    public void EqualizationShouldBeExecutedSuccessfullyForLogicallyEqualEntities()
+    public void EqualityShouldBeAssertedSuccessfullyForLogicallyEqualEntities()
     {
         var repositoryPrototype = PrepareRepositoryPrototype();
         var repository = new CodeRepository();
@@ -49,7 +49,7 @@ public class EqualizationTests
 
     [Theory]
     [MemberData(nameof(GetChanges))]
-    public void EqualizationShouldBeExecutedSuccessfullyForLogicallyUnequalEntities(Action<CodeRepository> change)
+    public void EqualityShouldBeAssertedSuccessfullyForLogicallyUnequalEntities(Action<CodeRepository> change)
     {
         Assert.NotNull(change);
         var repositoryPrototype = PrepareRepositoryPrototype();
@@ -60,6 +60,32 @@ public class EqualizationTests
 
         var equalizer = PrepareEqualizer();
         Assert.Throws<InvalidAssertException>(() => equalizer.AssertEquality(repositoryPrototype, repository));
+    }
+    
+    [Fact]
+    public void InequalityShouldBeAssertedSuccessfullyForLogicallyEqualEntities()
+    {
+        var repositoryPrototype = PrepareRepositoryPrototype();
+        var repository = new CodeRepository();
+        PrepareRepository(repository);
+
+        var equalizer = PrepareEqualizer();
+        Assert.Throws<InvalidAssertException>(() => equalizer.AssertInequality(repositoryPrototype, repository));
+    }
+
+    [Theory]
+    [MemberData(nameof(GetChanges))]
+    public void InequalityShouldBeAssertedSuccessfullyForLogicallyUnequalEntities(Action<CodeRepository> change)
+    {
+        Assert.NotNull(change);
+        var repositoryPrototype = PrepareRepositoryPrototype();
+        var repository = new CodeRepository();
+        PrepareRepository(repository);
+
+        change(repository);
+
+        var equalizer = PrepareEqualizer();
+        equalizer.AssertInequality(repositoryPrototype, repository);
     }
 
     [Fact]
