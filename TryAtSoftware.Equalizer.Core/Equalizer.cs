@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TryAtSoftware.Equalizer.Core.Assertions;
+using TryAtSoftware.Equalizer.Core.Extensions;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 using TryAtSoftware.Equalizer.Core.ProfileProviders;
 using TryAtSoftware.Equalizer.Core.Profiles;
@@ -44,7 +45,13 @@ public class Equalizer : IEqualizer
     public void AssertEquality(object? expected, object? actual)
     {
         var equalizationResult = this.Equalize(expected, actual);
-        Assert.True(equalizationResult.IsSuccessful, equalizationResult.Message);
+        AssertCorrectEqualizationResult(equalizationResult);
+    }
+
+    public void AssertInequality(object? expected, object? actual)
+    {
+        var equalizationResult = this.Differentiate(expected, actual);
+        AssertCorrectEqualizationResult(equalizationResult);
     }
 
     /// <summary>
@@ -58,21 +65,43 @@ public class Equalizer : IEqualizer
         this._providers.Add(provider);
     }
 
-    private IEqualizationResult Equalize(object? expected, object? actual)
-    {
-        var principalType = expected?.GetType() ?? typeof(object);
-        var subordinateType = actual?.GetType() ?? typeof(object);
-        return EqualizeInternally(expected, actual);
+    private IEqualizationResult Equalize(object? expected, object? actual) => this.EqualizeInternally(expected, actual, GetValueType(expected), GetValueType(actual));
 
-        IEqualizationResult EqualizeInternally(object? expectedValue, object? actualValue)
-        {
-            var profile = this.GetProfile(expectedValue, actualValue);
-            Assert.NotNull(profile, nameof(profile));
-            var options = new EqualizationOptions(principalType, subordinateType, EqualizeInternally);
-            return profile.Equalize(expectedValue, actualValue, options);
-        }
+    private IEqualizationResult Differentiate(object? expected, object? actual) => this.DifferentiateInternally(expected, actual, GetValueType(expected), GetValueType(actual));
+
+    private IEqualizationResult EqualizeInternally(object? expectedValue, object? actualValue, Type expectedType, Type actualType)
+    {
+        var profile = this.GetRequiredProfile(expectedValue, actualValue);
+        return profile.Equalize(expectedValue, actualValue, this.GenerateEqualizationOptions(expectedType, actualType));
     }
+
+    private IEqualizationResult DifferentiateInternally(object? expectedValue, object? actualValue, Type expectedType, Type actualType)
+    {
+        var profile = this.GetRequiredProfile(expectedValue, actualValue);
+        var equalizationResult = profile.Equalize(expectedValue, actualValue, this.GenerateEqualizationOptions(expectedType, actualType));
+
+        if (!equalizationResult.IsSuccessful) return new SuccessfulEqualizationResult();
+        return new UnsuccessfulEqualizationResult(profile.UnsuccessfulDifferentiation(expectedValue, actualValue));
+    }
+
+    private IEqualizationProfile GetRequiredProfile(object? expected, object? actual)
+    {
+        var profile = this.GetProfile(expected, actual);
+        Assert.NotNull(profile, nameof(profile));
+
+        return profile;
+    }
+
+    private EqualizationOptions GenerateEqualizationOptions(Type expectedType, Type actualType) => new (expectedType, actualType, (x, y) => this.EqualizeInternally(x, y, expectedType, actualType), (x, y) => this.DifferentiateInternally(x, y, expectedType, actualType));
 
     private IEqualizationProfile? GetProfile(object? expected, object? actual)
         => this._providers.ConcatenateWith(this._internallyDefinedProviders).IgnoreNullValues().Select(provider => provider.GetProfile(expected, actual)).FirstOrDefault(profile => profile is not null);
+
+    private static void AssertCorrectEqualizationResult(IEqualizationResult equalizationResult)
+    {
+        Assert.NotNull(equalizationResult, nameof(equalizationResult));
+        Assert.True(equalizationResult.IsSuccessful, equalizationResult.Message);
+    }
+    
+    private static Type GetValueType(object? value) => value?.GetType() ?? typeof(object);
 }
