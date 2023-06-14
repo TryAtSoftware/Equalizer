@@ -9,9 +9,11 @@
 
 # About the project
 
-`TryAtSoftware.Equalizer` is a library that should simplify the process of validating the equality between two values no matter of the complexity.
+`TryAtSoftware.Equalizer` is a library that should simplify the process of validating the equality between two values no
+matter of the complexity.
 
-Maybe you are used to writing code like this (where you have methods asserting the equality between every common properties of two objects):
+Maybe you are used to writing code like this (where you have methods asserting the equality between every common
+properties of two objects):
 
 ```C#
 public static void AssertAreEqual(Person a, Person b)
@@ -26,13 +28,17 @@ public static void AssertAreEqual(Person a, Person b)
 }
 ```
 
-There's nothing wrong with this code and it is totally fine to use such methods. But there are also some situations that are more complex and this solution is not applicable. For example, if you need to assert the equality between two different types, two different types that are part of separate polymorphic hierarchies, different data structures containing entities of different types.
+There's nothing wrong with this code and it is totally fine to use such methods.
+But there are also some situations that are more complex and this solution is not applicable.
+For example, if you need to assert the equality between two different types, two different types that are part of separate polymorphic hierarchies, different data structures containing entities of different types.
 
-Here comes our library! We offer a set of methods and components that can be used to accomplish this goal. They are reusable and can be applied to every projects of yours.
+Here comes our library! We offer a set of methods and components that can be used to accomplish this goal.
+They are reusable and can be applied to every projects of yours.
 
 # About us
 
-`Try At Software` is a software development company based in Bulgaria. We are mainly using `dotnet` technologies (`C#`, `ASP.NET Core`, `Entity Framework Core`, etc.) and our main idea is to provide a set of tools that can simplify the majority of work a developer does on a daily basis.
+`Try At Software` is a software development company based in Bulgaria.
+We are mainly using `dotnet` technologies (`C#`, `ASP.NET Core`, `Entity Framework Core`, etc.) and our main idea is to provide a set of tools that can simplify the majority of work a developer does on a daily basis.
 
 # Getting started
 
@@ -51,7 +57,8 @@ Or using the `dotnet CLI` from a terminal window:
 
 ## Introducing the `Equalizer`
 
-The `Equalizer` class is the heart of this library. It exposes two methods - `AssertEquality` and `AddProfileProvider` (in the next two chapters, you can find out more anout both of them). We suggest instantiating this class for every test (as some of the custom equalization profiles may depend on contextual data) using a similar structure:
+The `Equalizer` class is the heart of this library. It exposes two methods - `AssertEquality` and `AddProfileProvider` (in the next two chapters, you can find out more about both of them).
+We suggest instantiating this class for every test (as some of the custom equalization profiles may depend on contextual data) using a similar structure:
 
 ```C#
 public abstract class MyBaseTest
@@ -72,9 +79,22 @@ public abstract class MyBaseTest
 
 ### Asserting equality between two values
 
-In order to assert equality between two values all you need to do is call the `AssertEquality` method of the previously instantiated `Equalizer`. The first parameter you should pass is the expected value and the second - the actual one. The `Equalizer` will then choose the most suitable equalization profile to execute the assertion.
+In order to assert equality between two values all you need to do is call the `AssertEquality` method of the previously instantiated `Equalizer`.
+Provide the **expected** value as a first parameter and the **actual** value as a second.
+The `Equalizer` will then choose the most suitable equalization profile to execute the assertion.
+Likewise, there exists an `AssertInequality` method that asserts the opposite - the inequality between two values.
 
-> We should note here that every equalization profile may work with values of different types. There are no restrictions about the type of equality that should be asserted (it all depends on the custom equalization profiles that are used). However, our library is developed with the presumption that two values of different types may be semantically equal and one should be able to assert that without the necessity of defining additional methods for conversions.
+> We should note here that every equalization profile may work with values of different types.
+> There are no restrictions about the type of equality that should be asserted (it all depends on the custom equalization profiles that are used).
+> However, our library is developed with the presumption that two values of different types may be semantically equal and one should be able to assert that without the necessity of defining additional methods for conversions.
+
+Here is an example:
+
+```C#
+var equalizer = new Equalizer();
+equalizer.AssertEquality(expectedValue, actualValue);
+equalizer.AssertInequality(expectedValue, actualValue);
+```
 
 ### Registering additional equalization profiles
 
@@ -82,7 +102,8 @@ The registration of additional equalization profiles can happen in three differe
 
 - Using a `DedicatedProfileProvider`:
 
-This profile provider should be used whenever you know in advance the equalization profiles you want to register. Even the `Equalizer` class uses this in its core. Here is a short example:
+This profile provider should be used whenever you know in advance the equalization profiles you want to register.
+Even the `Equalizer` class uses this in its core. Here is a short example:
 
 ```C#
 var equalizer = new Equalizer();
