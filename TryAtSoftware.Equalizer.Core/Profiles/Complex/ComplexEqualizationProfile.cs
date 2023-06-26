@@ -84,6 +84,15 @@ public class ComplexEqualizationProfile<TExpected, TActual> : BaseTypedEqualizat
     }
 
     /// <summary>
+    /// Use this method to extend this complex equalization profile with some common configuration from the provided <paramref name="commonProfile"/>.
+    /// </summary>
+    /// <param name="commonProfile">Another <see cref="ComplexEqualizationProfile{TExpected,TActual}"/> instance this one should extend from.</param>
+    /// <exception cref="ArgumentNullException">Thrown of the provided <paramref name="commonProfile"/> is null.</exception>
+    [Obsolete(Constants.MethodWillBeRemoved)]
+    protected void Extend(ComplexEqualizationProfile<TExpected, TActual> commonProfile)
+        => this.Extend((IComplexEqualizationProfile<TExpected, TActual>)commonProfile);
+
+    /// <summary>
     /// Use this method to register an external <see cref="IComplexEqualizationRule{TExpected,TActual}"/>.
     /// </summary>
     /// <param name="complexEqualizationRule">The <see cref="IComplexEqualizationRule{TExpected,TActual}"/> instance to register.</param>
