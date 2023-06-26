@@ -8,7 +8,7 @@ public class CodeRepositoryEqualizationProfile : ComplexEqualizationProfile<Code
 {
     public CodeRepositoryEqualizationProfile()
     {
-        this.Extend(new CommonIdentifiableEqualizationProfile<CodeRepositoryPrototype, CodeRepository, int>());
+        this.Extend(new CommonIdentifiableEqualizationProfile<int>());
         this.Equalize(rp => rp.Name, r => r.Name);
         this.Equalize(rp => rp.Description, r => r.Description);
         this.Equalize(5, r => r.OrganizationId);

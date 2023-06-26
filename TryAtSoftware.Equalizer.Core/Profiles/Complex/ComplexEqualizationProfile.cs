@@ -11,9 +11,12 @@ using TryAtSoftware.Equalizer.Core.Profiles.Complex.Rules;
 /// </summary>
 /// <typeparam name="TExpected">The type of the expected value.</typeparam>
 /// <typeparam name="TActual">The type of the actual value.</typeparam>
-public class ComplexEqualizationProfile<TExpected, TActual> : BaseTypedEqualizationProfile<TExpected, TActual>
+public class ComplexEqualizationProfile<TExpected, TActual> : BaseTypedEqualizationProfile<TExpected, TActual>, IComplexEqualizationProfile<TExpected, TActual>
 {
     private readonly List<IComplexEqualizationRule<TExpected, TActual>> _rules = new();
+
+    /// <inheritdoc />
+    public IReadOnlyCollection<IComplexEqualizationRule<TExpected, TActual>> Rules => this._rules.AsReadOnly();
 
     /// <inheritdoc />
     protected override IEqualizationResult Equalize(TExpected expected, TActual actual, IEqualizationOptions options)
@@ -72,12 +75,12 @@ public class ComplexEqualizationProfile<TExpected, TActual> : BaseTypedEqualizat
     /// <summary>
     /// Use this method to extend this complex equalization profile with some common configuration from the provided <paramref name="commonProfile"/>.
     /// </summary>
-    /// <param name="commonProfile">Another <see cref="ComplexEqualizationProfile{TExpected,TActual}"/> instance this one should extend from.</param>
+    /// <param name="commonProfile">Another <see cref="IComplexEqualizationProfile{TExpected,TActual}"/> instance this one should extend from.</param>
     /// <exception cref="ArgumentNullException">Thrown of the provided <paramref name="commonProfile"/> is null.</exception>
-    protected void Extend(ComplexEqualizationProfile<TExpected, TActual> commonProfile)
+    protected void Extend(IComplexEqualizationProfile<TExpected, TActual> commonProfile)
     {
         if (commonProfile is null) throw new ArgumentNullException(nameof(commonProfile));
-        foreach (var commonProfileRule in commonProfile._rules) this.AddRule(commonProfileRule);
+        foreach (var commonProfileRule in commonProfile.Rules) this.AddRule(commonProfileRule);
     }
 
     /// <summary>
