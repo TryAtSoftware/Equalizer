@@ -9,8 +9,11 @@ public class CodeRepositoryEqualizationProfile : ComplexEqualizationProfile<Code
     public CodeRepositoryEqualizationProfile()
     {
         this.Extend(new CommonIdentifiableEqualizationProfile<int>());
+
+#pragma warning disable CS0618 // This directive should be removed soon. See issue #51
         this.Extend(new CodeRepositoryEqualizationProfilePart1());
         this.Extend(new CodeRepositoryEqualizationProfilePart2());
+#pragma warning restore CS0618
 
         this.Equalize(rp => rp.Description, r => r.Description);
         this.Equalize(5, r => r.OrganizationId);

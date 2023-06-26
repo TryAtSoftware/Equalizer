@@ -88,7 +88,9 @@ public class ComplexEqualizationProfile<TExpected, TActual> : BaseTypedEqualizat
     /// </summary>
     /// <param name="commonProfile">Another <see cref="ComplexEqualizationProfile{TExpected,TActual}"/> instance this one should extend from.</param>
     /// <exception cref="ArgumentNullException">Thrown of the provided <paramref name="commonProfile"/> is null.</exception>
+#pragma warning disable S1133 // This directive should be removed soon. See issue #51
     [Obsolete(Constants.MethodWillBeRemoved)]
+#pragma warning restore S1133
     protected void Extend(ComplexEqualizationProfile<TExpected, TActual> commonProfile)
         => this.Extend((IComplexEqualizationProfile<TExpected, TActual>)commonProfile);
 
