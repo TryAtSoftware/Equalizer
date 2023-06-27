@@ -9,9 +9,9 @@ public class ShopRandomizer : ComplexRandomizer<Shop>
     public ShopRandomizer()
         : base(new GeneralInstanceBuilder<Shop>())
     {
-        this.AddRandomizationRule(s => s.Id, new NumberRandomizer());
-        this.AddRandomizationRule(s => s.Name, new StringRandomizer());
-        this.AddRandomizationRule(s => s.Address, new StringRandomizer());
-        this.AddRandomizationRule(s => s.Area, new NumberRandomizer());
+        this.Randomize(s => s.Id, new NumberRandomizer());
+        this.Randomize(s => s.Name, new StringRandomizer());
+        this.Randomize(s => s.Address, new StringRandomizer());
+        this.Randomize(s => s.Area, new NumberRandomizer());
     }
 }
