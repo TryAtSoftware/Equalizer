@@ -1,5 +1,6 @@
 ﻿namespace TryAtSoftware.Equalizer.Core.Tests.Templates;
 
+using System.Collections;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 using TryAtSoftware.Equalizer.Core.Templates;
 using Xunit;
@@ -14,13 +15,35 @@ public class ValueTemplateEqualizationTests
     }
 
     [Theory, InlineData(null), InlineData(""), InlineData("   ")]
-    public void EmptyTextEqualizationProfileShouldWorkCorrectly(string? value)
+    public void EmptyTextEqualizationProfileShouldWorkCorrectlyWithEmptyText(string? value)
+    {
+        this._equalizer.AssertEquality(Value.Empty, value);
+        this._equalizer.AssertEquality(value, Value.Empty);
+    }
+    
+    [Fact]
+    public void EmptyTextEqualizationProfileShouldWorkCorrectlyWithNonEmptyText()
+    {
+        this._equalizer.AssertInequality(Value.Empty, "text");
+        this._equalizer.AssertInequality("text", Value.Empty);
+    }
+
+    [Theory, InlineData(null), InlineData(new object[] { new object[0] })]
+    public void EmptyCollectionEqualizationProfileShouldWorkCorrectlyWithEmptyCollection(IEnumerable? value)
     {
         this._equalizer.AssertEquality(Value.Empty, value);
         this._equalizer.AssertEquality(value, Value.Empty);
         
-        this._equalizer.AssertInequality(Value.Empty, "text");
+        this._equalizer.AssertInequality(Value.Empty, new [] { new object() });
         this._equalizer.AssertInequality("text", Value.Empty);
+    }
+    
+    [Fact]
+    public void EmptyCollectionEqualizationProfileShouldWorkCorrectlyWithNonEmptyCollection()
+    {
+        var collection = new[] { new object() };
+        this._equalizer.AssertInequality(Value.Empty, collection);
+        this._equalizer.AssertInequality(collection, Value.Empty);
     }
     
     [Fact]
