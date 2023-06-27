@@ -9,7 +9,7 @@
     <ItemGroup>
       <PackageReference Include="BenchmarkDotNet" Version="0.13.5" />
       <PackageReference Include="CompareNETObjects" Version="4.79.0" />
-      <PackageReference Include="TryAtSoftware.Equalizer" Version="1.0.1-alpha.3" />
+      <PackageReference Include="TryAtSoftware.Equalizer" Version="1.0.1" />
     </ItemGroup>
 
 </Project>
