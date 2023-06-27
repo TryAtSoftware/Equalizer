@@ -3,8 +3,7 @@
 using TryAtSoftware.Equalizer.Core.Profiles.Complex;
 using TryAtSoftware.Equalizer.Core.Tests.Models;
 
-public class CommonIdentifiableEqualizationProfile<TExpected, TActual, TKey> : ComplexEqualizationProfile<TExpected, TActual>
-    where TActual : IIdentifiable<TKey>
+public class CommonIdentifiableEqualizationProfile<TKey> : ComplexEqualizationProfile<object, IIdentifiable<TKey>>
 {
     public CommonIdentifiableEqualizationProfile()
     {

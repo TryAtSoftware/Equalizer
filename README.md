@@ -138,7 +138,7 @@ There are some of examples of what might be referred by this term:
 - Equalizing values of different types
 - Equalizing values of the same type when this is not a trivial task
 
-All complex equalization profiles should inherit a common base class called `ComplexEqualizationProfile<TExpected, TActual>`.
+All complex equalization profiles should inherit a base class called `ComplexEqualizationProfile<TExpected, TActual>` (it implements the corresponding `IComplexEqualizationProfile<TExpected, TActual>` interface).
 The inheritors should setup the equalization logic (throughout registering various `IComplexEqualizationRule<TExpected, TActual>` instances) in their constructor.
 There are predefined methods for equalization and differentiation that can be used directly.
 Here is one standard example:
@@ -148,7 +148,7 @@ public class CodeRepositoryEqualizationProfile : ComplexEqualizationProfile<Code
 {
     public CodeRepositoryEqualizationProfile()
     {
-        this.Extend(new CommonIdentifiableEqualizationProfile<CodeRepositoryPrototype, CodeRepository, int>());
+        this.Extend(new CommonIdentifiableEqualizationProfile<int>());
         this.Equalize(rp => rp.Name, r => r.Name);
         this.Equalize(rp => rp.Description, r => r.Description);
         this.Equalize(5, r => r.OrganizationId);
