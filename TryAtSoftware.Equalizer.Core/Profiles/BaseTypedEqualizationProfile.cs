@@ -1,5 +1,6 @@
 ﻿namespace TryAtSoftware.Equalizer.Core.Profiles;
 
+using System.Diagnostics.CodeAnalysis;
 using TryAtSoftware.Equalizer.Core.Assertions;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 
@@ -17,7 +18,7 @@ public abstract class BaseTypedEqualizationProfile<TExpected, TActual> : IEquali
     /// If the value of this property should be true, we suggest using nullable reference types when this is possible.
     /// </remarks>
     protected virtual bool AllowNullExpected => false;
-    
+
     /// <summary>
     /// Gets a value indicating whether or not the actual value can be null.
     /// </summary>
@@ -26,20 +27,15 @@ public abstract class BaseTypedEqualizationProfile<TExpected, TActual> : IEquali
     /// </remarks>
     protected virtual bool AllowNullActual => false;
 
-    /// <inheritdoc />
-    public bool CanExecuteFor(object? expected, object? actual)
-    {
-        if (expected is not TExpected && (expected is not null || !this.AllowNullExpected)) return false;
-        if (actual is not TActual && (actual is not null || !this.AllowNullActual)) return false;
+    protected virtual bool IsInvariant => false;
 
-        return true;
-    }
+    /// <inheritdoc />
+    public bool CanExecuteFor(object? expected, object? actual) => this.TryExtractValues(expected, actual, out _, out _);
 
     /// <inheritdoc />
     public IEqualizationResult Equalize(object? expected, object? actual, IEqualizationOptions options)
     {
-        var typedExpected = this.AllowNullExpected && expected is null ? (TExpected)expected! : Assert.OfType<TExpected>(expected, nameof(expected));
-        var typedActual = this.AllowNullActual && actual is null ? (TActual)actual! : Assert.OfType<TActual>(actual, nameof(actual));
+        Assert.True(this.TryExtractValues(expected, actual, out var typedExpected, out var typedActual), "");
         Assert.NotNull(options, nameof(options));
 
         return this.Equalize(typedExpected, typedActual, options);
@@ -53,4 +49,26 @@ public abstract class BaseTypedEqualizationProfile<TExpected, TActual> : IEquali
     /// <param name="options">An <see cref="IEqualizationOptions"/> instance exposing additional information about the equalization process.</param>
     /// <returns>Returns a subsequently built <see cref="IEqualizationResult"/> instance containing information about the additionally executed equalization.</returns>
     protected abstract IEqualizationResult Equalize(TExpected expected, TActual actual, IEqualizationOptions options);
+
+    private bool TryExtractValues(object? expected, object? actual, [NotNullWhen(true)] out TExpected? typedExpected, [NotNullWhen(true)] out TActual? typedActual)
+    {
+        if ((TryMatchType(expected, this.AllowNullExpected, out typedExpected) && TryMatchType(actual, this.AllowNullActual, out typedActual)) || (this.IsInvariant && TryMatchType(actual, this.AllowNullExpected, out typedExpected) && TryMatchType(expected, this.AllowNullActual, out typedActual)))
+            return true;
+
+        typedActual = default;
+        typedActual = default;
+        return false;
+    }
+
+    private static bool TryMatchType<T>(object? value, bool allowNull, [NotNullWhen(true)] out T? result)
+    {
+        if (value is T typedValue)
+        {
+            result = typedValue;
+            return true;
+        }
+
+        result = default;
+        return allowNull && value is null;
+    }
 }

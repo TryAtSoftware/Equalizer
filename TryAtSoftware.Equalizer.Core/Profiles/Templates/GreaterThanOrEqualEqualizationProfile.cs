@@ -18,4 +18,7 @@ public class GreaterThanOrEqualEqualizationProfile : BaseTypedEqualizationProfil
 
         return new SuccessfulEqualizationResult();
     }
+
+    /// <inheritdoc />
+    protected override bool IsInvariant => true;
 }

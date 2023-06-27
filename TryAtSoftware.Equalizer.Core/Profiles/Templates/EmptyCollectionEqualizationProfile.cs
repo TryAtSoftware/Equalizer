@@ -20,4 +20,7 @@ public class EmptyCollectionEqualizationProfile : BaseTypedEqualizationProfile<E
 
     /// <inheritdoc />
     protected override bool AllowNullActual => true;
+
+    /// <inheritdoc />
+    protected override bool IsInvariant => true;
 }

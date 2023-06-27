@@ -11,7 +11,7 @@ internal static class Assert
             throw new InvalidAssertException($"The variable {variableName} was not expected to be null.");
     }
 
-    public static void True(bool value, string message)
+    public static void True([DoesNotReturnIf(false)] bool value, string message)
     {
         if (!value)
             throw new InvalidAssertException(message);

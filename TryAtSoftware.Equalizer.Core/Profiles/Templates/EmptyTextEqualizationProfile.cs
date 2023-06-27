@@ -18,4 +18,7 @@ public class EmptyTextEqualizationProfile : BaseTypedEqualizationProfile<EmptyVa
 
     /// <inheritdoc />
     protected override bool AllowNullActual => true;
+
+    /// <inheritdoc />
+    protected override bool IsInvariant => true;
 }
