@@ -1,6 +1,7 @@
 ﻿namespace TryAtSoftware.Equalizer.Core.Tests;
 
 using System.Collections.Generic;
+using TryAtSoftware.Equalizer.Core.Interfaces;
 using TryAtSoftware.Equalizer.Core.Profiles;
 using TryAtSoftware.Randomizer.Core.Helpers;
 using Xunit;
@@ -19,11 +20,8 @@ public class DictionaryEqualizationProfileTests
     [Fact]
     public void EmptyDictionariesShouldBeEqualizedSuccessfully()
     {
-        var profile = InstantiateProfile();
-        var equalizationOptionsMock = TestsCompanion.MockEqualizationOptions();
-
-        var equalizationResult = profile.Equalize(new Dictionary<int, int>(), new Dictionary<int, int>(), equalizationOptionsMock.Object);
-        Assert.True(equalizationResult.IsSuccessful);
+        var equalizer = InstantiateEqualizer();
+        equalizer.AssertEquality(new Dictionary<int, int>(), new Dictionary<int, int>());
     }
 
     [Theory]
@@ -33,22 +31,19 @@ public class DictionaryEqualizationProfileTests
     [InlineData(2, 1)]
     public void DictionariesWithDifferentLengthShouldBeEqualizedUnsuccessfully(int firstDictionaryLength, int secondDictionaryLength)
     {
-        var profile = InstantiateProfile();
-        var equalizationOptionsMock = TestsCompanion.MockEqualizationOptions();
+        var equalizer = InstantiateEqualizer();
 
         Dictionary<int, int> firstDictionary = new (), secondDictionary = new ();
         for (var i = 0; i < firstDictionaryLength; i++) firstDictionary[i] = i;
         for (var i = 0; i < secondDictionaryLength; i++) firstDictionary[i] = i;
 
-        var equalizationResult = profile.Equalize(firstDictionary, secondDictionary, equalizationOptionsMock.Object);
-        Assert.False(equalizationResult.IsSuccessful);
+        equalizer.AssertInequality(firstDictionary, secondDictionary);
     }
 
     [Fact]
     public void DictionariesShouldBeEqualizedSuccessfully()
     {
-        var profile = InstantiateProfile();
-        var equalizationOptionsMock = TestsCompanion.MockEqualizationOptions();
+        var equalizer = InstantiateEqualizer();
 
         var elementsCount = RandomizationHelper.RandomInteger(3, 10);
         Dictionary<int, int> firstDictionary = new (), secondDictionary = new ();
@@ -60,37 +55,31 @@ public class DictionaryEqualizationProfileTests
             secondDictionary[i] = element;
         }
 
-        var equalizationResult = profile.Equalize(firstDictionary, secondDictionary, equalizationOptionsMock.Object);
-        Assert.True(equalizationResult.IsSuccessful);
+        equalizer.AssertEquality(firstDictionary, secondDictionary);
     }
 
     [Fact]
     public void DictionariesWithDifferentElementsShouldBeEqualizedUnsuccessfully()
     {
+        var equalizer = InstantiateEqualizer();
+
         var elementsCount = RandomizationHelper.RandomInteger(3, 10);
-        var indexOfFailure = RandomizationHelper.RandomInteger(0, elementsCount);
-
-        var profile = InstantiateProfile();
-        var equalizationOptionsMock = TestsCompanion.MockEqualizationOptions((a, b) => (int)a == indexOfFailure && (int)b == indexOfFailure ? new UnsuccessfulEqualizationResult("Simulated failure") : new SuccessfulEqualizationResult());
-
         Dictionary<int, int> firstDictionary = new (), secondDictionary = new ();
+
         for (var i = 0; i < elementsCount; i++)
         {
-            firstDictionary[i] = i;
-            secondDictionary[i] = i;
+            var element = RandomizationHelper.RandomInteger(int.MinValue, int.MaxValue);
+            firstDictionary[i] = element;
+            secondDictionary[i] = element + 1;
         }
 
-        var equalizationResult = profile.Equalize(firstDictionary, secondDictionary, equalizationOptionsMock.Object);
-
-        Assert.False(equalizationResult.IsSuccessful);
-        Assert.False(string.IsNullOrWhiteSpace(equalizationResult.Message));
+        equalizer.AssertInequality(firstDictionary, secondDictionary);
     }
 
     [Fact]
     public void DictionariesWithDifferentKeysShouldBeEqualizedUnsuccessfully()
     {
-        var profile = InstantiateProfile();
-        var equalizationOptionsMock = TestsCompanion.MockEqualizationOptions();
+        var equalizer = InstantiateEqualizer();
 
         var elementsCount = RandomizationHelper.RandomInteger(3, 10);
         Dictionary<int, int> firstDictionary = new (), secondDictionary = new ();
@@ -102,10 +91,10 @@ public class DictionaryEqualizationProfileTests
             secondDictionary[i * 2] = element;
         }
 
-        var equalizationResult = profile.Equalize(firstDictionary, secondDictionary, equalizationOptionsMock.Object);
-        Assert.False(equalizationResult.IsSuccessful);
-        Assert.False(string.IsNullOrWhiteSpace(equalizationResult.Message));
+        equalizer.AssertInequality(firstDictionary, secondDictionary);
     }
 
+    private static IEqualizer InstantiateEqualizer() => new Equalizer();
+    
     private static DictionaryEqualizationProfile InstantiateProfile() => new ();
 }
