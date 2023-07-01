@@ -5,7 +5,7 @@ using TryAtSoftware.Equalizer.Core.Extensions;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 
 /// <summary>
-/// An implementation of the <see cref="IEqualizationProfile"/> interface responsible for equalizing two collections.
+/// An implementation of the <see cref="IEqualizationProfile"/> interface responsible for equalizing two dictionaries.
 /// </summary>
 public class DictionaryEqualizationProfile : BaseTypedEqualizationProfile<IDictionary, IDictionary>
 {
