@@ -27,6 +27,12 @@ public abstract class BaseTypedEqualizationProfile<TExpected, TActual> : IEquali
     /// </remarks>
     protected virtual bool AllowNullActual => false;
 
+    /// <summary>
+    /// Gets a value indicating whether the order of expected and actual value is invariant.
+    /// </summary>
+    /// <remarks>
+    /// If this property is <c>true</c>, this equalizer will be used for equalization of (expected>, actual) and (actual, expected) pairs of values (the order does not matter).
+    /// </remarks>
     protected virtual bool IsInvariant => false;
 
     /// <inheritdoc />
