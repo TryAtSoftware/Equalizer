@@ -32,7 +32,7 @@ public class CollectionEqualizationProfileTests
     [InlineData(1, 0)]
     [InlineData(1, 2)]
     [InlineData(2, 1)]
-    public void CollectionWithDifferentLengthShouldBeEqualizedUnsuccessfully(int firstArrayLength, int secondArrayLength)
+    public void CollectionsWithDifferentLengthShouldBeEqualizedUnsuccessfully(int firstArrayLength, int secondArrayLength)
     {
         var profile = InstantiateProfile();
         var equalizationOptionsMock = TestsCompanion.MockEqualizationOptions();

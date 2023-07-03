@@ -31,6 +31,7 @@ public class Equalizer : IEqualizer
         dedicatedProfileProvider.AddProfile(new GreaterThanOrEqualEqualizationProfile());
         dedicatedProfileProvider.AddProfile(new EmptyCollectionEqualizationProfile());
         dedicatedProfileProvider.AddProfile(new EmptyTextEqualizationProfile());
+        dedicatedProfileProvider.AddProfile(new DictionaryEqualizationProfile());
         dedicatedProfileProvider.AddProfile(new CollectionEqualizationProfile());
         dedicatedProfileProvider.AddProfile(new StandardEqualizationProfile());
         this._internallyDefinedProviders.Add(dedicatedProfileProvider);
