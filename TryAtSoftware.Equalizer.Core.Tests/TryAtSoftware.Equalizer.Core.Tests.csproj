@@ -11,7 +11,7 @@
         <PackageReference Include="coverlet.msbuild" Version="6.0.0" PrivateAssets="all" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />
         <PackageReference Include="Moq" Version="4.18.4" />
-        <PackageReference Include="SonarAnalyzer.CSharp" Version="9.3.0.71466" PrivateAssets="all" />
+        <PackageReference Include="SonarAnalyzer.CSharp" Version="10.15.0.120848" PrivateAssets="all" />
         <PackageReference Include="TryAtSoftware.Randomizer" Version="1.0.4" />
         <PackageReference Include="xunit" Version="2.4.2" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5" PrivateAssets="all" />
