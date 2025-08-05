@@ -93,6 +93,13 @@ equalizer.AssertEquality(expectedValue, actualValue);
 equalizer.AssertInequality(expectedValue, actualValue);
 ```
 
+### Built-in equalization profiles
+
+There are a few equalization profiles that are registered by default for any `Equalizer` instance:
+- Specialized equalization profiles that evaluate [value templates](#value-templates);
+- Equalization profiles designed to compare common data structures (`IDictionary` and `IEnumerable` instances);
+- The standard equalization profile which determines equality using default comparison mechanisms, including the `object.Equals` method.
+
 ### Registering additional equalization profiles
 
 The registration of additional equalization profiles can happen in three different ways:
