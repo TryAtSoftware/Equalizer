@@ -9,11 +9,8 @@
 
 # About the project
 
-`TryAtSoftware.Equalizer` is a library that should simplify the process of validating the equality between two values no
-matter of the complexity.
-
-Maybe you are used to writing code like this (where you have methods asserting the equality between every common
-properties of two objects):
+`TryAtSoftware.Equalizer` is a library that should simplify the process of validating the equality between two values no matter of the complexity.
+Maybe you are used to writing code like this (where you have methods asserting the equality between all common properties of two objects):
 
 ```C#
 public static void AssertAreEqual(Person a, Person b)
@@ -33,7 +30,7 @@ But there are also some situations that are more complex and this solution is no
 For example, if you need to assert the equality between two different types, two different types that are part of separate polymorphic hierarchies, different data structures containing entities of different types.
 
 Here comes our library! We offer a set of methods and components that can be used to accomplish this goal.
-They are reusable and can be applied to every projects of yours.
+They are reusable and can be applied to every project of yours.
 
 # About us
 
@@ -79,10 +76,10 @@ public abstract class MyBaseTest
 
 ### Asserting equality between two values
 
-In order to assert equality between two values all you need to do is call the `AssertEquality` method of the previously instantiated `Equalizer`.
+To assert equality between two values all you need to do is call the `AssertEquality` method of the previously instantiated `Equalizer`.
 Provide the **expected** value as a first parameter and the **actual** value as a second.
 The `Equalizer` will then choose the most suitable equalization profile to execute the assertion.
-Likewise, there exists an `AssertInequality` method that can be used in order to assert the inequality between two values.
+Likewise, there exists an `AssertInequality` method that can be used to assert the inequality between two values.
 
 > We should note here that every equalization profile may work with values of different types.
 > There are no restrictions about the type of equality that should be asserted (it all depends on the custom equalization profiles that are used).
@@ -128,12 +125,13 @@ static void RegisterEqualizationProfilesFromDI(Equalizer equalizer, IServiceProv
 
 - Using a custom implementation of the `IEqualizationProfileProvider` interface.
 
-If you have some very special case so none of the existing profile providers can deal with it, of course, feel free to write your own custom implementation of the `IEqualizationProfileProvider` interface.
+If you have some exceptional case so none of the existing profile providers can deal with it, of course,
+feel free to write your own custom implementation of the `IEqualizationProfileProvider` interface.
 
 ## Complex equalization profiles
 
 The equalization profiles described in this chapter should be used to setup a `complex equalization` process.
-There are some of examples of what might be referred by this term:
+There are some examples of what might be referred to by this term:
 
 - Equalizing values of different types
 - Equalizing values of the same type when this is not a trivial task
@@ -192,7 +190,8 @@ public class PersonEqualizationProfile : ComplexEqualizationProfile<Person, Pers
 }
 ```
 
-This code is simple, very straightforward and easy to understand. However, it seems redundant and hard to maintain (especially when the structure of the equalized type changes).
+This code is simple, very straightforward, and easy to understand.
+However, it seems redundant and hard to maintain (especially when the structure of the equalized type changes).
 
 Instead of creating multiple complex equalization profiles to equalize the values of all publicly exposed properties for a given type, you can use a `general equalization` profile.
 
@@ -209,7 +208,8 @@ equalizer.AddProfileProvider(dedicatedProfileProvider);
 
 This is an advanced topic that describes how the default `general equalization` behavior can be controlled.
 As written above the `general equalization` profiles will equalize all publicly exposed properties for a given type.
-However, in some cases one would like to equalize some inaccessible properties or even fields; in others one would like to prevent certain properties from being equalized.
+However, in some cases, one would like to equalize some inaccessible properties or even fields;
+in others, one would like to prevent certain properties from being equalized.
 This can be achieved by passing a custom `IGeneralEqualizationContext<T>` instance to the `GeneralEqualizationProfile<T>` constructor.
 We have identified two approaches of doing this:
 
@@ -229,26 +229,27 @@ No matter of the selected approach, there are a few more things to be considered
 There are some cases in which the general equalization process should be executed over a limited subset of all exposed members from a given type.
 This is what the feature of `partial general equalization` covers.
 It is built atop the existing infrastructure you are already familiar with.
-In order to use it there are two things that should be done:
+To use it, there are two things that should be done:
 - A `PartialGeneralEqualizationProfile<T>` for the corresponding type should be registered within the `Equalizer` that is being used
 - When asserting the semantic equality for a subset of the members between two values of the same time, the `expected` value should be an `IPartialValue<T>` instance. This can be achieved by using some of the predefined types or extension methods:
 
 ```C#
-PersonRandomizer personRandomizer = new PersonRandomizer();
-Person person = personRandomizer.PrepareRandomValue();
+var equalizer = new Equalizer();
 
-// When using the following value the equality all members but the specified (excluded) ones will be validated.
-// This call will instantiate an `ExclusivePartialValue<Person>` instance.
-IPartialValue<Person> partialPerson1 = person.Exclude(nameof(Person.FirstName));
+var dedicatedProfileProvider = new DedicatedProfileProvider();
+dedicatedProfileProvider.AddProfile(new PartialGeneralEqualizationProfile<Person>());
 
-// When using the following value only the equality of the specified (included) members will be validated. The other members will be skiped.
-// This call will instantiate an `InclusivePartialValue<Person>` instance.
-IPartialValue<Person> partialPerson2 = person.Include(nameof(Person.LastName));
+// After update, assert that all properties (except for the email) are generally equal.
+equalizer.AssertEquality(originalPerson.Exclude(nameof(Person.Email)), updatedPerson);
+
+// Assert that the `InternalName` property values of both instances are generally equal.
+equalizer.AssertEqualirt(initialCategory.Include(nameof(Category.CreatedBy)), newCategory);
 ```
 
 ## Value templates
 
-There are some cases for which standard value equality is not applicable and the plain old process of equality validation is no longer appropriate.
+There are some cases for which standard value equality is not applicable,
+and the plain old process of equality validation is no longer appropriate.
 `Value templates` allow us to be as flexible and minimalistic as possible because thus we can extend the existing platform with different behavior.
 For each defined `value template` there are standard internally included equalization profiles that realize additional logical functions - `greater than a value`, `greater than or equal to a value`, `lower than a value`, `lower than or equal to a value`, `is empty`, etc.
 
