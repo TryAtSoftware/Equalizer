@@ -1,7 +1,7 @@
 ﻿namespace TryAtSoftware.Equalizer.Core.Tests;
 
 using System;
-using Moq;
+using NSubstitute.ReceivedExtensions;
 using TryAtSoftware.Equalizer.Core.Profiles;
 using TryAtSoftware.Randomizer.Core.Helpers;
 using Xunit;
@@ -21,9 +21,9 @@ public class CollectionEqualizationProfileTests
     public void EmptyCollectionsShouldBeEqualizedSuccessfully()
     {
         var profile = InstantiateProfile();
-        var equalizationOptionsMock = TestsCompanion.MockEqualizationOptions();
+        var equalizationOptions = TestsCompanion.MockEqualizationOptions();
 
-        var equalizationResult = profile.Equalize(Array.Empty<int>(), Array.Empty<int>(), equalizationOptionsMock.Object);
+        var equalizationResult = profile.Equalize(Array.Empty<int>(), Array.Empty<int>(), equalizationOptions);
         Assert.True(equalizationResult.IsSuccessful);
     }
 
@@ -37,7 +37,7 @@ public class CollectionEqualizationProfileTests
         var profile = InstantiateProfile();
         var equalizationOptionsMock = TestsCompanion.MockEqualizationOptions();
 
-        var equalizationResult = profile.Equalize(new int[firstArrayLength], new int[secondArrayLength], equalizationOptionsMock.Object);
+        var equalizationResult = profile.Equalize(new int[firstArrayLength], new int[secondArrayLength], equalizationOptionsMock);
         Assert.False(equalizationResult.IsSuccessful);
     }
 
@@ -45,7 +45,7 @@ public class CollectionEqualizationProfileTests
     public void CollectionsShouldBeEqualizedSuccessfully()
     {
         var profile = InstantiateProfile();
-        var equalizationOptionsMock = TestsCompanion.MockEqualizationOptions();
+        var equalizationOptions = TestsCompanion.MockEqualizationOptions();
 
         var elementsCount = RandomizationHelper.RandomInteger(3, 10);
         var firstArray = new int[elementsCount];
@@ -58,7 +58,7 @@ public class CollectionEqualizationProfileTests
             secondArray[i] = element;
         }
 
-        var equalizationResult = profile.Equalize(firstArray, secondArray, equalizationOptionsMock.Object);
+        var equalizationResult = profile.Equalize(firstArray, secondArray, equalizationOptions);
         Assert.True(equalizationResult.IsSuccessful);
     }
 
@@ -69,22 +69,18 @@ public class CollectionEqualizationProfileTests
         var indexOfFailure = RandomizationHelper.RandomInteger(0, elementsCount);
 
         var profile = InstantiateProfile();
-        var equalizationOptionsMock = TestsCompanion.MockEqualizationOptions((a, b) => (int)a == indexOfFailure && (int)b == indexOfFailure ? new UnsuccessfulEqualizationResult("Simulated failure") : new SuccessfulEqualizationResult());
+        var equalizationOptions = TestsCompanion.MockEqualizationOptions((a, b) => (int)a == indexOfFailure && (int)b == indexOfFailure ? new UnsuccessfulEqualizationResult("Simulated failure") : new SuccessfulEqualizationResult());
 
         int[] firstArray = new int[elementsCount], secondArray = new int[elementsCount];
         for (var i = 0; i < elementsCount; i++) (firstArray[i], secondArray[i]) = (i, i);
 
-        var equalizationResult = profile.Equalize(firstArray, secondArray, equalizationOptionsMock.Object);
+        var equalizationResult = profile.Equalize(firstArray, secondArray, equalizationOptions);
 
         Assert.False(equalizationResult.IsSuccessful);
         Assert.False(string.IsNullOrWhiteSpace(equalizationResult.Message));
 
         for (var i = 0; i < elementsCount; i++)
-        {
-            var currentParameterValue = i;
-            var expectedTimes = i <= indexOfFailure ? Times.Once() : Times.Never();
-            equalizationOptionsMock.Verify(x => x.Equalize(currentParameterValue, currentParameterValue), expectedTimes);
-        }
+            equalizationOptions.Received(i <= indexOfFailure ? Quantity.Exactly(1) : Quantity.None()).Equalize(i, i);
     }
 
     private static CollectionEqualizationProfile InstantiateProfile() => new ();
