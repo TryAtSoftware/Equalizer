@@ -2,7 +2,7 @@
 
 using System;
 using System.Collections.Generic;
-using Moq;
+using NSubstitute;
 using TryAtSoftware.Equalizer.Core.Interfaces;
 using TryAtSoftware.Randomizer.Core.Helpers;
 using Xunit;
@@ -30,27 +30,25 @@ public static class TestsCompanion
     }
 
     public static IEqualizationProfileProvider MockEqualizationProfileProvider()
-    {
-        var profileProviderMock = new Mock<IEqualizationProfileProvider>();
-        return profileProviderMock.Object;
-    }
+        => Substitute.For<IEqualizationProfileProvider>();
 
     public static IEqualizationProfile MockEqualizationProfile(bool isExecutable = false)
     {
-        var profileMock = new Mock<IEqualizationProfile>();
-        profileMock.Setup(x => x.CanExecuteFor(It.IsAny<object>(), It.IsAny<object>())).Returns(isExecutable);
+        var profile = Substitute.For<IEqualizationProfile>();
+        profile.CanExecuteFor(Arg.Any<object>(), Arg.Any<object>()).Returns(isExecutable);
 
-        return profileMock.Object;
+        return profile;
     }
     
-    public static Mock<IEqualizationOptions> MockEqualizationOptions() => MockEqualizationOptions((_, _) => new SuccessfulEqualizationResult());
+    public static IEqualizationOptions MockEqualizationOptions() => MockEqualizationOptions((_, _) => new SuccessfulEqualizationResult());
 
-    public static Mock<IEqualizationOptions> MockEqualizationOptions(Func<object, object, IEqualizationResult> internalEqualization)
+    public static IEqualizationOptions MockEqualizationOptions(Func<object, object, IEqualizationResult> internalEqualization)
     {
-        var equalizationOptionsMock = new Mock<IEqualizationOptions>();
-        equalizationOptionsMock.Setup(eo => eo.Equalize(It.IsAny<object>(), It.IsAny<object>())).Returns(internalEqualization);
-        equalizationOptionsMock.Setup(eo => eo.ExpectedType).Returns(typeof(object));
-        equalizationOptionsMock.Setup(eo => eo.ActualType).Returns(typeof(object));
-        return equalizationOptionsMock;
+        var equalizationOptions = Substitute.For<IEqualizationOptions>();
+        equalizationOptions.Equalize(Arg.Any<object>(), Arg.Any<object>()).Returns(x => internalEqualization(x[0], x[1]));
+        equalizationOptions.ExpectedType.Returns(typeof(object));
+        equalizationOptions.ActualType.Returns(typeof(object));
+        
+        return equalizationOptions;
     }
 }
