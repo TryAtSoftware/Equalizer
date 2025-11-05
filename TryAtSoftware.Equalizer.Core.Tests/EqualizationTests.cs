@@ -119,6 +119,59 @@ public class EqualizationTests
         equalizer.AssertEquality(repositoryPrototype, extendedRepository);
     }
 
+    [Fact]
+    public void CheckEqualityShouldReturnTrueForLogicallyEqualEntities()
+    {
+        var repositoryPrototype = PrepareRepositoryPrototype();
+        var repository = new CodeRepository();
+        PrepareRepository(repository);
+
+        var equalizer = PrepareEqualizer();
+        var result = equalizer.CheckEquality(repositoryPrototype, repository);
+
+        Assert.True(result);
+    }
+
+    [Theory]
+    [MemberData(nameof(GetChanges))]
+    public void CheckEqualityShouldReturnFalseForLogicallyUnequalEntities(Action<CodeRepository> change)
+    {
+        Assert.NotNull(change);
+        var repositoryPrototype = PrepareRepositoryPrototype();
+        var repository = new CodeRepository();
+        PrepareRepository(repository);
+
+        change(repository);
+
+        var equalizer = PrepareEqualizer();
+        var result = equalizer.CheckEquality(repositoryPrototype, repository);
+
+        Assert.False(result);
+    }
+
+    [Theory]
+    [InlineData(null, null)]
+    [InlineData(10, 10)]
+    public void CheckEqualityShouldReturnTrueForKnownEqualValues(object? expected, object? actual)
+    {
+        var equalizer = new Equalizer();
+        var result = equalizer.CheckEquality(expected, actual);
+
+        Assert.True(result);
+    }
+
+    [Theory]
+    [InlineData(null, "val")]
+    [InlineData("val", null)]
+    [InlineData(10, 10.0)]
+    public void CheckEqualityShouldReturnFalseForKnownUnequalValues(object? expected, object? actual)
+    {
+        var equalizer = new Equalizer();
+        var result = equalizer.CheckEquality(expected, actual);
+
+        Assert.False(result);
+    }
+
     public static IEnumerable<object[]> GetChanges()
     {
         yield return new object[] { new Action<CodeRepository>(rp => rp.Id = 0) };

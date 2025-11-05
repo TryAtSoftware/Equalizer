@@ -55,6 +55,13 @@ public class Equalizer : IEqualizer
         AssertCorrectEqualizationResult(equalizationResult);
     }
 
+    /// <inheritdoc />
+    public bool CheckEquality(object? expected, object? actual)
+    {
+        var equalizationResult = this.Equalize(expected, actual);
+        return equalizationResult.IsSuccessful;
+    }
+
     /// <summary>
     /// Use this method to register an external <see cref="IEqualizationProfileProvider"/>.
     /// </summary>
