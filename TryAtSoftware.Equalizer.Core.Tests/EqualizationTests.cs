@@ -44,7 +44,7 @@ public class EqualizationTests
         PrepareRepository(repository);
 
         var equalizer = PrepareEqualizer();
-        equalizer.AssertEquality(repositoryPrototype, repository);
+        AssertEquality(equalizer, repositoryPrototype, repository);
     }
 
     [Theory]
@@ -68,7 +68,7 @@ public class EqualizationTests
     public void EqualityShouldBeAssertedSuccessfullyForKnownValues(object? expected, object? actual)
     {
         var equalizer = new Equalizer();
-        equalizer.AssertEquality(expected, actual);
+        AssertEquality(equalizer, expected, actual);
     }
     
     [Fact]
@@ -94,7 +94,7 @@ public class EqualizationTests
         change(repository);
 
         var equalizer = PrepareEqualizer();
-        equalizer.AssertInequality(repositoryPrototype, repository);
+        AssertInequality(equalizer, repositoryPrototype, repository);
     }
 
     [Theory]
@@ -104,7 +104,7 @@ public class EqualizationTests
     public void InequalityShouldBeAssertedSuccessfullyForKnownValues(object? expected, object? actual)
     {
         var equalizer = new Equalizer();
-        equalizer.AssertInequality(expected, actual);
+        AssertInequality(equalizer, expected, actual);
     }
 
     [Fact]
@@ -116,7 +116,7 @@ public class EqualizationTests
         extendedRepository.CreationTime = DateTime.Today;
 
         var equalizer = PrepareEqualizer();
-        equalizer.AssertEquality(repositoryPrototype, extendedRepository);
+        AssertEquality(equalizer, repositoryPrototype, extendedRepository);
     }
 
     public static IEnumerable<object[]> GetChanges()
@@ -172,4 +172,16 @@ public class EqualizationTests
     }
 
     private static IEnumerable<string> PrepareInitialCommits() => new[] { "A", "B", "C", "merge A and B" };
+
+    private static void AssertEquality(Equalizer equalizer, object? expected, object? actual)
+    {
+        Assert.True(equalizer.CheckEquality(expected, actual));
+        equalizer.AssertEquality(expected, actual);
+    }
+
+    private static void AssertInequality(Equalizer equalizer, object? expected, object? actual)
+    {
+        Assert.False(equalizer.CheckEquality(expected, actual));
+        equalizer.AssertInequality(expected, actual);
+    }
 }

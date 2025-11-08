@@ -18,4 +18,12 @@ public interface IEqualizer
     /// <param name="expected">The expected object instance.</param>
     /// <param name="actual">The actual object instance.</param>
     void AssertInequality(object? expected, object? actual);
+
+    /// <summary>
+    /// Use this method to check if two values are equal.
+    /// </summary>
+    /// <param name="expected">The expected object instance.</param>
+    /// <param name="actual">The actual object instance.</param>
+    /// <returns><c>true</c> if the values are equal; otherwise, <c>false</c>.</returns>
+    bool CheckEquality(object? expected, object? actual);
 }
