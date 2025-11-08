@@ -175,15 +175,13 @@ public class EqualizationTests
 
     private static void AssertEquality(Equalizer equalizer, object? expected, object? actual)
     {
-        var checkResult = equalizer.CheckEquality(expected, actual);
-        Assert.True(checkResult);
+        Assert.True(equalizer.CheckEquality(expected, actual));
         equalizer.AssertEquality(expected, actual);
     }
 
     private static void AssertInequality(Equalizer equalizer, object? expected, object? actual)
     {
-        var checkResult = equalizer.CheckEquality(expected, actual);
-        Assert.False(checkResult);
+        Assert.False(equalizer.CheckEquality(expected, actual));
         equalizer.AssertInequality(expected, actual);
     }
 }
