@@ -20,7 +20,7 @@ public interface IEqualizer
     void AssertInequality(object? expected, object? actual);
 
     /// <summary>
-    /// Use this method to check the equality between the two values.
+    /// Use this method to check if two values are equal.
     /// </summary>
     /// <param name="expected">The expected object instance.</param>
     /// <param name="actual">The actual object instance.</param>

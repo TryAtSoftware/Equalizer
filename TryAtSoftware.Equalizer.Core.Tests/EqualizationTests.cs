@@ -44,7 +44,7 @@ public class EqualizationTests
         PrepareRepository(repository);
 
         var equalizer = PrepareEqualizer();
-        equalizer.AssertEquality(repositoryPrototype, repository);
+        AssertEquality(equalizer, repositoryPrototype, repository);
     }
 
     [Theory]
@@ -68,7 +68,7 @@ public class EqualizationTests
     public void EqualityShouldBeAssertedSuccessfullyForKnownValues(object? expected, object? actual)
     {
         var equalizer = new Equalizer();
-        equalizer.AssertEquality(expected, actual);
+        AssertEquality(equalizer, expected, actual);
     }
     
     [Fact]
@@ -94,7 +94,7 @@ public class EqualizationTests
         change(repository);
 
         var equalizer = PrepareEqualizer();
-        equalizer.AssertInequality(repositoryPrototype, repository);
+        AssertInequality(equalizer, repositoryPrototype, repository);
     }
 
     [Theory]
@@ -104,7 +104,7 @@ public class EqualizationTests
     public void InequalityShouldBeAssertedSuccessfullyForKnownValues(object? expected, object? actual)
     {
         var equalizer = new Equalizer();
-        equalizer.AssertInequality(expected, actual);
+        AssertInequality(equalizer, expected, actual);
     }
 
     [Fact]
@@ -116,60 +116,7 @@ public class EqualizationTests
         extendedRepository.CreationTime = DateTime.Today;
 
         var equalizer = PrepareEqualizer();
-        equalizer.AssertEquality(repositoryPrototype, extendedRepository);
-    }
-
-    [Fact]
-    public void CheckEqualityShouldReturnTrueForLogicallyEqualEntities()
-    {
-        var repositoryPrototype = PrepareRepositoryPrototype();
-        var repository = new CodeRepository();
-        PrepareRepository(repository);
-
-        var equalizer = PrepareEqualizer();
-        var result = equalizer.CheckEquality(repositoryPrototype, repository);
-
-        Assert.True(result);
-    }
-
-    [Theory]
-    [MemberData(nameof(GetChanges))]
-    public void CheckEqualityShouldReturnFalseForLogicallyUnequalEntities(Action<CodeRepository> change)
-    {
-        Assert.NotNull(change);
-        var repositoryPrototype = PrepareRepositoryPrototype();
-        var repository = new CodeRepository();
-        PrepareRepository(repository);
-
-        change(repository);
-
-        var equalizer = PrepareEqualizer();
-        var result = equalizer.CheckEquality(repositoryPrototype, repository);
-
-        Assert.False(result);
-    }
-
-    [Theory]
-    [InlineData(null, null)]
-    [InlineData(10, 10)]
-    public void CheckEqualityShouldReturnTrueForKnownEqualValues(object? expected, object? actual)
-    {
-        var equalizer = new Equalizer();
-        var result = equalizer.CheckEquality(expected, actual);
-
-        Assert.True(result);
-    }
-
-    [Theory]
-    [InlineData(null, "val")]
-    [InlineData("val", null)]
-    [InlineData(10, 10.0)]
-    public void CheckEqualityShouldReturnFalseForKnownUnequalValues(object? expected, object? actual)
-    {
-        var equalizer = new Equalizer();
-        var result = equalizer.CheckEquality(expected, actual);
-
-        Assert.False(result);
+        AssertEquality(equalizer, repositoryPrototype, extendedRepository);
     }
 
     public static IEnumerable<object[]> GetChanges()
@@ -225,4 +172,18 @@ public class EqualizationTests
     }
 
     private static IEnumerable<string> PrepareInitialCommits() => new[] { "A", "B", "C", "merge A and B" };
+
+    private static void AssertEquality(Equalizer equalizer, object? expected, object? actual)
+    {
+        var checkResult = equalizer.CheckEquality(expected, actual);
+        Assert.True(checkResult);
+        equalizer.AssertEquality(expected, actual);
+    }
+
+    private static void AssertInequality(Equalizer equalizer, object? expected, object? actual)
+    {
+        var checkResult = equalizer.CheckEquality(expected, actual);
+        Assert.False(checkResult);
+        equalizer.AssertInequality(expected, actual);
+    }
 }
