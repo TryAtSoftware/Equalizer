@@ -98,7 +98,13 @@ public class DictionaryEqualizationProfileTests
     public void DictionariesWithFewerExpectedElementsShouldShowCorrectMessage()
     {
         var profile = InstantiateProfile();
-        var equalizationOptions = TestsCompanion.MockEqualizationOptions();
+        var equalizationOptions = TestsCompanion.MockEqualizationOptions((a, b) =>
+        {
+            // Make count comparisons fail when counts are different
+            if (a is int && b is int && (int)a != (int)b)
+                return new UnsuccessfulEqualizationResult("Counts differ");
+            return new SuccessfulEqualizationResult();
+        });
 
         var expected = new Dictionary<int, int> { { 1, 1 }, { 2, 2 } };
         var actual = new Dictionary<int, int> { { 1, 1 }, { 2, 2 }, { 3, 3 } };
@@ -113,7 +119,13 @@ public class DictionaryEqualizationProfileTests
     public void DictionariesWithMoreExpectedElementsShouldShowCorrectMessage()
     {
         var profile = InstantiateProfile();
-        var equalizationOptions = TestsCompanion.MockEqualizationOptions();
+        var equalizationOptions = TestsCompanion.MockEqualizationOptions((a, b) =>
+        {
+            // Make count comparisons fail when counts are different
+            if (a is int && b is int && (int)a != (int)b)
+                return new UnsuccessfulEqualizationResult("Counts differ");
+            return new SuccessfulEqualizationResult();
+        });
 
         var expected = new Dictionary<int, int> { { 1, 1 }, { 2, 2 }, { 3, 3 } };
         var actual = new Dictionary<int, int> { { 1, 1 }, { 2, 2 } };
