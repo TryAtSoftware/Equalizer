@@ -94,6 +94,36 @@ public class DictionaryEqualizationProfileTests
         equalizer.AssertInequality(firstDictionary, secondDictionary);
     }
 
+    [Fact]
+    public void DictionariesWithFewerExpectedElementsShouldShowCorrectMessage()
+    {
+        var profile = InstantiateProfile();
+        var equalizationOptions = TestsCompanion.MockEqualizationOptions();
+
+        var expected = new Dictionary<int, int> { { 1, 1 }, { 2, 2 } };
+        var actual = new Dictionary<int, int> { { 1, 1 }, { 2, 2 }, { 3, 3 } };
+        var equalizationResult = profile.Equalize(expected, actual, equalizationOptions);
+
+        Assert.False(equalizationResult.IsSuccessful);
+        Assert.Contains("Expected count: 2", equalizationResult.Message);
+        Assert.Contains("Actual count: > 2", equalizationResult.Message);
+    }
+
+    [Fact]
+    public void DictionariesWithMoreExpectedElementsShouldShowCorrectMessage()
+    {
+        var profile = InstantiateProfile();
+        var equalizationOptions = TestsCompanion.MockEqualizationOptions();
+
+        var expected = new Dictionary<int, int> { { 1, 1 }, { 2, 2 }, { 3, 3 } };
+        var actual = new Dictionary<int, int> { { 1, 1 }, { 2, 2 } };
+        var equalizationResult = profile.Equalize(expected, actual, equalizationOptions);
+
+        Assert.False(equalizationResult.IsSuccessful);
+        Assert.Contains("Expected count: > 2", equalizationResult.Message);
+        Assert.Contains("Actual count: 2", equalizationResult.Message);
+    }
+
     private static IEqualizer InstantiateEqualizer() => new Equalizer();
     
     private static DictionaryEqualizationProfile InstantiateProfile() => new ();

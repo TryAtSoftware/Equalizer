@@ -25,7 +25,14 @@ public class CollectionEqualizationProfile : BaseTypedEqualizationProfile<IEnume
             var hasMoreActual = actualEnumerator.MoveNext();
 
             if (!hasMoreExpected && !hasMoreActual) canContinue = false;
-            else if (hasMoreExpected != hasMoreActual) return new UnsuccessfulEqualizationResult(this.UnsuccessfulEqualization(expected, actual, "Counts do not match"));
+            else if (hasMoreExpected != hasMoreActual)
+            {
+                var currentCount = iteratedValues.Count;
+                var countMessage = hasMoreExpected
+                    ? $"Expected count: > {currentCount}; Actual count: {currentCount}"
+                    : $"Expected count: {currentCount}; Actual count: > {currentCount}";
+                return new UnsuccessfulEqualizationResult(this.UnsuccessfulEqualization(expected, actual, countMessage));
+            }
             else
                 iteratedValues.Add((expectedEnumerator.Current, actualEnumerator.Current));
         }

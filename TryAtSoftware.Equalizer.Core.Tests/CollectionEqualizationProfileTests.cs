@@ -42,6 +42,36 @@ public class CollectionEqualizationProfileTests
     }
 
     [Fact]
+    public void CollectionsWithFewerExpectedElementsShouldShowCorrectMessage()
+    {
+        var profile = InstantiateProfile();
+        var equalizationOptions = TestsCompanion.MockEqualizationOptions();
+
+        var expected = new[] { 1, 2 };
+        var actual = new[] { 1, 2, 3 };
+        var equalizationResult = profile.Equalize(expected, actual, equalizationOptions);
+
+        Assert.False(equalizationResult.IsSuccessful);
+        Assert.Contains("Expected count: 2", equalizationResult.Message);
+        Assert.Contains("Actual count: > 2", equalizationResult.Message);
+    }
+
+    [Fact]
+    public void CollectionsWithMoreExpectedElementsShouldShowCorrectMessage()
+    {
+        var profile = InstantiateProfile();
+        var equalizationOptions = TestsCompanion.MockEqualizationOptions();
+
+        var expected = new[] { 1, 2, 3 };
+        var actual = new[] { 1, 2 };
+        var equalizationResult = profile.Equalize(expected, actual, equalizationOptions);
+
+        Assert.False(equalizationResult.IsSuccessful);
+        Assert.Contains("Expected count: > 2", equalizationResult.Message);
+        Assert.Contains("Actual count: 2", equalizationResult.Message);
+    }
+
+    [Fact]
     public void CollectionsShouldBeEqualizedSuccessfully()
     {
         var profile = InstantiateProfile();

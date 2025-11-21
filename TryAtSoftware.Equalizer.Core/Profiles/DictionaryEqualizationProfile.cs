@@ -15,7 +15,10 @@ public class DictionaryEqualizationProfile : BaseTypedEqualizationProfile<IDicti
         var countEqualizationResult = options.Equalize(expected.Count, actual.Count);
         if (!countEqualizationResult.IsSuccessful)
         {
-            var errorMessage = this.UnsuccessfulEqualization(expected, actual, "Counts do not match.");
+            var countMessage = expected.Count < actual.Count
+                ? $"Expected count: {expected.Count}; Actual count: > {expected.Count}"
+                : $"Expected count: > {actual.Count}; Actual count: {actual.Count}";
+            var errorMessage = this.UnsuccessfulEqualization(expected, actual, countMessage);
             return new UnsuccessfulEqualizationResult(errorMessage.WithInner(countEqualizationResult));
         }
 
